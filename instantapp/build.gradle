@@ -1,6 +1,10 @@
 apply plugin: 'com.android.instantapp'
+apply plugin: 'kotlin-android'
 
 dependencies {
     implementation project(':instantCM')
     implementation project(':base')
+}
+repositories {
+    mavenCentral()
 }

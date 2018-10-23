@@ -1,4 +1,5 @@
 apply plugin: 'com.android.feature'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -18,8 +19,14 @@ android {
 }
 
 dependencies {
-    api 'com.android.support:appcompat-v7:28.0.0'
     api 'com.android.support:design:28.0.0'
     application project(':app')
     feature project(':instantCM')
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api 'org.greenrobot:eventbus:3.1.1'
+
+
+}
+repositories {
+    mavenCentral()
 }
