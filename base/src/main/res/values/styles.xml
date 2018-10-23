@@ -19,4 +19,25 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="CMText" parent="Base.TextAppearance.AppCompat">
+        <item name="android:fontFamily">serif</item>
+    </style>
+    <style name="CMText.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="CMText.Primary">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="CMText.Secondary">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <style name="CMText.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
 </resources>
