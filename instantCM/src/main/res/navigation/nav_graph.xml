@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph" app:startDestination="@id/messengesFragment">
+
+    <fragment android:id="@+id/messengesFragment" android:name="com.slai.communitymessenger.ui.MessengesFragment"
+              android:label="MessengesFragment" tools:layout="@layout/frag_messages">
+        <action android:id="@+id/action_messengesFragment_to_permissionsFragment"
+                app:destination="@id/permissionsFragment"/>
+        <action android:id="@+id/action_messengesFragment_to_newMessageFragment"
+                app:destination="@id/newMessageFragment"/>
+        <action android:id="@+id/action_messengesFragment_to_individualMessageFragment"
+                app:destination="@id/individualMessageFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newMessageFragment" android:name="com.slai.communitymessenger.ui.NewMessageFragment"
+              android:label="NewMessageFragment" tools:layout="@layout/frag_new_messeges">
+        <action android:id="@+id/action_newMessageFragment_to_individualMessageFragment"
+                app:destination="@id/individualMessageFragment"/>
+    </fragment>
+    <fragment android:id="@+id/individualMessageFragment"
+              android:name="com.slai.communitymessenger.ui.IndividualMessageFragment"
+              android:label="IndividualMessageFragment"  tools:layout="@layout/frag_single_messages"/>
+    <fragment android:id="@+id/permissionsFragment" android:name="com.slai.communitymessenger.ui.PermissionsFragment"
+              android:label="PermissionsFragment">
+        <action android:id="@+id/action_permissionsFragment_to_messengesFragment"
+                app:destination="@id/messengesFragment" tools:layout="@layout/frag_permissions"/>
+    </fragment>
+</navigation>

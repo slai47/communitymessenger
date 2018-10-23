@@ -4,22 +4,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.snackbar.Snackbar
+import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.slai.communitymessenger.handlers.SMSHandler
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -35,6 +28,17 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp()
+            = findNavController(R.id.my_nav_host_fragment).navigateUp()
+
+    override fun onResume() {
+        super.onResume()
+        val manager = SMSHandler(this)
+        if(!manager.isSMSPermissionGranted()){
+            findNavController(R.id.my_nav_host_fragment).navigate(R.id.action_messengesFragment_to_permissionsFragment)
         }
     }
 }

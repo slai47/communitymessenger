@@ -7,16 +7,22 @@ import android.content.pm.PackageManager
 import android.telephony.SmsManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.slai.communitymessenger.model.Message
 
 class SMSHandler (val context : Context){
-
-    private val PERMISSION_SEND_SMS = 123
-
+    companion object {
+        @JvmField val PERMISSION_SEND_SMS = 123
+    }
 
     fun sendSMS(phoneNumber: String, message: String) {
         val manager = SmsManager.getDefault()
-
         manager.sendTextMessage(phoneNumber, null, message, null, null)
+    }
+
+    fun getSMSList() : List<Message>{
+        val list = ArrayList<Message>()
+        // Get texts here
+        return list
     }
 
 
@@ -26,12 +32,8 @@ class SMSHandler (val context : Context){
         return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun requestReadAndSendSmsPermission( activity : Activity) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_SMS)) {
-            // You may display a non-blocking explanation here, read more in the documentation:
-            // https://developer.android.com/training/permissions/requesting.html
-        }
-        ActivityCompat.requestPermissions(activity,
+    fun requestReadAndSendSmsPermission( activity : Activity?) {
+        ActivityCompat.requestPermissions(activity!!,
             arrayOf(Manifest.permission.SEND_SMS),
             PERMISSION_SEND_SMS)
     }
@@ -44,8 +46,4 @@ class SMSHandler (val context : Context){
         return supported
     }
 
-}
-
-fun instance(context: Context): SMSHandler {
-    return SMSHandler(context)
 }

@@ -1,5 +1,6 @@
 package com.slai.communitymessenger.utils
 
+import android.content.Context
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
@@ -12,6 +13,15 @@ import com.google.android.material.snackbar.Snackbar
  *
  */
 class OpenBar(val view : View) {
+
+    companion object {
+        fun on(view: View) : OpenBar = OpenBar(view)
+
+        val SHORT : Int = Snackbar.LENGTH_SHORT
+        val LONG : Int = Snackbar.LENGTH_LONG
+        val INDEFINITELY : Int = Snackbar.LENGTH_INDEFINITE
+
+    }
 
     var duration : Int = Snackbar.LENGTH_SHORT
     lateinit var message : String
