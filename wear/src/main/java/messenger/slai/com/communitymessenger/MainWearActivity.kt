@@ -2,6 +2,7 @@ package messenger.slai.com.communitymessenger
 
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
+import com.slai.communitymessenger.R
 
 class MainWearActivity : WearableActivity() {
 
