@@ -1,1 +1,1 @@
-include ':instantCM', ':app', ':base', ':instantapp', ':wear', ':things'
+include ':instantCM', ':app', ':base', ':instantapp', ':wear'
