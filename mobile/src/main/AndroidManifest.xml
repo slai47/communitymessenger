@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="${packageName}">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application>
+        <meta-data
+                android:name="com.google.android.gms.car.application"
+                android:resource="@xml/automotive_app_desc"/>
+
+        <service android:name="messenger.slai.com.communitymessenger.AutoService">
+        </service>
+
+        <receiver android:name="messenger.slai.com.communitymessenger.AutoReadReceiver">
+            <intent-filter>
+                <action android:name="messenger.slai.com.communitymessenger.ACTION_MESSAGE_READ"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="messenger.slai.com.communitymessenger.AutoReplyReceiver">
+            <intent-filter>
+                <action android:name="messenger.slai.com.communitymessenger.ACTION_MESSAGE_REPLY"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
