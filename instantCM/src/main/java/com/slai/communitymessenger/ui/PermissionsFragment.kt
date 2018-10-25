@@ -1,5 +1,6 @@
 package com.slai.communitymessenger.ui
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.Snackbar
@@ -16,6 +18,7 @@ import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.frag_permissions.*
 import org.greenrobot.eventbus.EventBus
+import java.lang.StringBuilder
 
 class PermissionsFragment: Fragment(){
 
@@ -33,15 +36,37 @@ class PermissionsFragment: Fragment(){
     }
 
     private fun initView() {
+        val permission = arguments?.getString("permission")
+        val alertMessage : StringBuilder = StringBuilder()
+        when(permission){
+            "sms" -> {
+                alertMessage.append("Community Messenger needs Permissions to see your SMS in order to work.")
+            }
+            "camera" -> {
+                alertMessage.append("Community Messenger needs permission to use your camera to take photo and video.")
+            }
+        }
+        alertMessage.append(" Upon clicking \"Ok\", a new dialog will appear.")
+
         val manager = SMSHandler(permissionsFragment.context)
         if(!manager.isSMSPermissionGranted()){
             val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
             builder.setTitle("Permission Request")
-            builder.setMessage("Community Messenger needs Permissions to see your SMS in order to work. Upon clicking \"Ok\", a new dialog will appear")
+            builder.setMessage(alertMessage.toString())
             builder.setCancelable(false)
             builder.setPositiveButton("Ok"){ dialogInterface: DialogInterface, i: Int ->
-                val manager = SMSHandler(permissionsFragment.context)
-                manager.requestReadAndSendSmsPermission(activity)
+                val permission = arguments?.getString("permission")
+                when(permission){
+                    "sms" -> {
+                        SMSHandler(permissionsFragment.context).requestReadAndSendSmsPermission(activity)
+                    }
+                    "camera" -> {
+                        ActivityCompat.requestPermissions(activity!!,
+                            arrayOf(Manifest.permission.CAMERA),
+                            147
+                        )
+                    }
+                }
             }
 
             builder.setNegativeButton("No"){ dialogInterface: DialogInterface, i: Int ->
@@ -70,12 +95,34 @@ class PermissionsFragment: Fragment(){
                 }
                 return
             }
+            147 -> { // camera permssion
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // SMS related task you need to do.
+                    Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    cancelled()
+                }
+                return
+            }
         }// other 'case' lines to check for other
         // permissions this app might request
     }
 
     private fun cancelled() {
-        OpenBar.on(permissionsFragment).with("This is required. So... By?").duration(OpenBar.INDEFINITELY).show()
+        val permission = arguments?.getString("permission")
+        when(permission){
+            "sms" -> {
+                OpenBar.on(permissionsFragment).with("This is required. So... By?").duration(OpenBar.INDEFINITELY).show()
+            }
+            "camera" -> {
+                Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)
+            }
+        }
     }
 
     override fun onPause() {

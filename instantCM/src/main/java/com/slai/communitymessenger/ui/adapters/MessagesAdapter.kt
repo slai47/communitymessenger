@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.model.Message
+import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.list_message.view.*
 
 class MessagesAdapter(val context : Context, val list : ArrayList<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
@@ -22,10 +24,13 @@ class MessagesAdapter(val context : Context, val list : ArrayList<Message>) : Re
     }
 
     override fun onBindViewHolder(holder: MessagesViewHolder, position: Int) {
-
-
+        val item : Message = list.get(position)
+        holder.primary.text = item.sender
+        holder.secondary.text = item.body
+        holder.itemView.setOnClickListener { v ->
+            OpenBar.on(v).with("hello").duration(Snackbar.LENGTH_SHORT).show()
+        }
     }
-
 }
 
 class MessagesViewHolder(view : View) : RecyclerView.ViewHolder(view) {
