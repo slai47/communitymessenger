@@ -4,32 +4,44 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph" app:startDestination="@id/messengesFragment">
 
-    <fragment android:id="@+id/messengesFragment" android:name="com.slai.communitymessenger.ui.MessengesFragment"
-              android:label="MessengesFragment" tools:layout="@layout/frag_messages">
+    <fragment android:id="@+id/messengesFragment"
+              android:name="com.slai.communitymessenger.ui.MessengesFragment"
+              android:label="MessengesFragment"
+              tools:layout="@layout/frag_messages">
         <action android:id="@+id/action_messengesFragment_to_permissionsFragment"
                 app:destination="@id/permissionsFragment"/>
         <action android:id="@+id/action_messengesFragment_to_newMessageFragment"
                 app:destination="@id/newMessageFragment"/>
         <action android:id="@+id/action_messengesFragment_to_individualMessageFragment"
-                app:destination="@id/individualMessageFragment"/>
+                app:destination="@id/individualMessageFragment"
+                app:enterAnim="@anim/slide_up"
+                app:exitAnim="@anim/slide_down"
+                app:popEnterAnim="@anim/slide_up"
+                app:popExitAnim="@anim/slide_down"/>
     </fragment>
-    <fragment android:id="@+id/newMessageFragment" android:name="com.slai.communitymessenger.ui.NewMessageFragment"
-              android:label="NewMessageFragment" tools:layout="@layout/frag_new_messeges">
+    <fragment android:id="@+id/newMessageFragment"
+              android:name="com.slai.communitymessenger.ui.NewMessageFragment"
+              android:label="NewMessageFragment"
+              tools:layout="@layout/frag_new_messeges">
         <action android:id="@+id/action_newMessageFragment_to_individualMessageFragment"
                 app:destination="@id/individualMessageFragment"/>
     </fragment>
     <fragment android:id="@+id/individualMessageFragment"
               android:name="com.slai.communitymessenger.ui.IndividualMessageFragment"
-              android:label="IndividualMessageFragment"  tools:layout="@layout/frag_single_messages">
+              android:label="IndividualMessageFragment"
+              tools:layout="@layout/frag_single_messages">
         <action android:id="@+id/action_individualMessageFragment_to_permissionsFragment"
                 app:destination="@id/permissionsFragment"/>
+        <argument android:name="id" app:argType="String" android:defaultValue="0"/>
+        <argument android:name="type" app:argType="String" android:defaultValue="full"/>
     </fragment>
-    <fragment android:id="@+id/permissionsFragment" android:name="com.slai.communitymessenger.ui.PermissionsFragment"
+    <fragment android:id="@+id/permissionsFragment"
+              android:name="com.slai.communitymessenger.ui.PermissionsFragment"
               android:label="PermissionsFragment">
         <action android:id="@+id/action_permissionsFragment_to_messengesFragment"
                 app:destination="@id/messengesFragment" tools:layout="@layout/frag_permissions"/>
-        <argument android:name="permission" app:argType="String" android:defaultValue="sms"/>
         <action android:id="@+id/action_permissionsFragment_to_individualMessageFragment"
                 app:destination="@id/individualMessageFragment"/>
+        <argument android:name="permission" app:argType="String" android:defaultValue="sms"/>
     </fragment>
 </navigation>
