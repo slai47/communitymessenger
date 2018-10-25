@@ -1,18 +1,19 @@
 package com.slai.communitymessenger.ui
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Telephony
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.google.android.material.snackbar.Snackbar
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.utils.OpenBar
@@ -20,7 +21,14 @@ import kotlinx.android.synthetic.main.frag_permissions.*
 import org.greenrobot.eventbus.EventBus
 import java.lang.StringBuilder
 
+
 class PermissionsFragment: Fragment(){
+
+    companion object {
+        @JvmField val ARG_PERMISSION = "permission"
+        @JvmField val EXTRA_SMS = "sms"
+        @JvmField val EXTRA_CAMERA = "camera"
+    }
 
     // might need to make this one that will accept many different permissions for future use
 
@@ -57,10 +65,10 @@ class PermissionsFragment: Fragment(){
             builder.setPositiveButton("Ok"){ dialogInterface: DialogInterface, i: Int ->
                 val permission = arguments?.getString("permission")
                 when(permission){
-                    "sms" -> {
+                    EXTRA_SMS -> {
                         SMSHandler(permissionsFragment.context).requestReadAndSendSmsPermission(activity)
                     }
-                    "camera" -> {
+                    EXTRA_CAMERA -> {
                         ActivityCompat.requestPermissions(activity!!,
                             arrayOf(Manifest.permission.CAMERA),
                             147
@@ -87,7 +95,13 @@ class PermissionsFragment: Fragment(){
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // SMS related task you need to do.
-                    Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_messengesFragment)
+                    if (SMSHandler(activity!!.applicationContext).isDefaultApp()) {
+                        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+                        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, activity?.packageName)
+                        startActivityForResult(intent, 14747)
+                    } else {
+                        Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_messengesFragment)
+                    }
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -109,8 +123,22 @@ class PermissionsFragment: Fragment(){
                 }
                 return
             }
+            14747 -> {
+                Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_messengesFragment)
+            }
         }// other 'case' lines to check for other
         // permissions this app might request
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            14747 -> {
+                if(resultCode == RESULT_OK) {
+                    Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_messengesFragment)
+                }
+            }
+        }
     }
 
     private fun cancelled() {

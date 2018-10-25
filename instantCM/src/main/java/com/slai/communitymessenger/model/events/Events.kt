@@ -1,3 +1,3 @@
 package com.slai.communitymessenger.model.events
 
-class SMSReceivedEvent(body : String, sender : String)
+class SMSReceivedEvent(val body : String, val sender : String)

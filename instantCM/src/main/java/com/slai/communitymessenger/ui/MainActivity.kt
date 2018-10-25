@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val manager = SMSHandler(this)
         if(!manager.isSMSPermissionGranted()){
-            findNavController(R.id.my_nav_host_fragment).navigate(R.id.action_messengesFragment_to_permissionsFragment)
+            val bundle = Bundle()
+            bundle.putString(PermissionsFragment.ARG_PERMISSION, PermissionsFragment.EXTRA_SMS)
+            findNavController(R.id.my_nav_host_fragment).navigate(R.id.action_messengesFragment_to_permissionsFragment, bundle)
         }
     }
 }

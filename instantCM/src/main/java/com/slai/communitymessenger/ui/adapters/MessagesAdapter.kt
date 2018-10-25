@@ -2,7 +2,6 @@ package com.slai.communitymessenger.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,7 +12,7 @@ import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.list_message.view.*
 
-class MessagesAdapter(val context : Context, val list : ArrayList<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
+class MessagesAdapter(val context : Context, val list : List<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesViewHolder {
         return MessagesViewHolder(LayoutInflater.from(context).inflate(R.layout.list_message, parent, false))

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.Telephony
 import android.telephony.SmsManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,33 +25,31 @@ class SMSHandler (val context : Context){
         val list = ArrayList<Message>()
         // Get texts here
         var objSms : Message
-        val message = Uri.parse("content://sms/")
-        val cr = mActivity.getContentResolver()
+        val message = Uri.parse("content://sms/inbox")
+        // content://sms/sent
+        // contetn://sms/draft
+        val cr = context.contentResolver
 
         val c = cr.query(message, null, null, null, null)
-        context.startManagingCursor(c)
-        val totalSMS = c.getCount()
+        val totalSMS = c.count
 
         if (c.moveToFirst()) {
             for (i in 0 until totalSMS) {
 
-                objSms = Message()
-                objSms.setId(c.getString(c.getColumnIndexOrThrow("_id")))
-                objSms.setAddress(
-                    c.getString(
-                        c
-                            .getColumnIndexOrThrow("address")
-                    )
-                )
-                objSms.setMsg(c.getString(c.getColumnIndexOrThrow("body")))
-                objSms.setReadState(c.getString(c.getColumnIndex("read")))
-                objSms.setTime(c.getString(c.getColumnIndexOrThrow("date")))
-                if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
-                    objSms.setFolderName("inbox")
+                var id = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.THREAD_ID))
+                var address = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
+                var body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
+                var state = c.getString(c.getColumnIndex(Telephony.Sms.READ))
+                var date = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
+                var folder : String
+                if (c.getString(c.getColumnIndexOrThrow(Telephony.Sms.TYPE)).contains("1")) {
+                    folder = "inbox"
                 } else {
-                    objSms.setFolderName("sent")
+                    folder = "sent"
                 }
+                val person = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.PERSON))
 
+                objSms = Message(body, address, state == "1", date, folder, id, person)
                 list.add(objSms)
                 c.moveToNext()
             }
@@ -59,8 +58,6 @@ class SMSHandler (val context : Context){
         // throw new RuntimeException("You have no SMS");
         // }
         c.close()
-
-        return lstSms
 
         return list
     }
@@ -84,6 +81,10 @@ class SMSHandler (val context : Context){
         if(manager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY))
             supported = true
         return supported
+    }
+
+    fun isDefaultApp() : Boolean{
+        return !Telephony.Sms.getDefaultSmsPackage(context).equals(context.packageName)
     }
 
 }
