@@ -18,6 +18,7 @@
                 app:exitAnim="@anim/slide_down"
                 app:popEnterAnim="@anim/slide_up"
                 app:popExitAnim="@anim/slide_down"/>
+        <action android:id="@+id/action_messengesFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
     </fragment>
     <fragment android:id="@+id/newMessageFragment"
               android:name="com.slai.communitymessenger.ui.NewMessageFragment"
@@ -43,5 +44,9 @@
         <action android:id="@+id/action_permissionsFragment_to_individualMessageFragment"
                 app:destination="@id/individualMessageFragment"/>
         <argument android:name="permission" app:argType="String" android:defaultValue="sms"/>
+    </fragment>
+    <fragment android:id="@+id/settingsFragment" android:name="com.slai.communitymessenger.ui.SettingsFragment"
+              android:label="SettingsFragment">
+        <action android:id="@+id/action_settingsFragment_to_messengesFragment" app:destination="@id/messengesFragment"/>
     </fragment>
 </navigation>

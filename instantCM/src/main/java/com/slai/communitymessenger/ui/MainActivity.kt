@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
+import kotlinx.android.synthetic.main.frag_messages.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_AUTO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
@@ -26,7 +31,10 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                Navigation.findNavController(toolbar).navigate(R.id.action_messengesFragment_to_settingsFragment)
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
