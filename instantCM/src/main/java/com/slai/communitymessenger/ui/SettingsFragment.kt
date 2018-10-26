@@ -1,16 +1,13 @@
 package com.slai.communitymessenger.ui
 
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import com.slai.communitymessenger.R
-import android.R.attr.versionName
 import android.content.pm.PackageManager
 
 
@@ -38,7 +35,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         try {
             val pInfo = context?.packageManager?.getPackageInfo(activity?.packageName, 0)
             version = pInfo?.versionName!!
-            code = pInfo?.versionCode!!
+            code = pInfo?.versionCode
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }

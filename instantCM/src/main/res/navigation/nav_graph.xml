@@ -40,7 +40,8 @@
               android:name="com.slai.communitymessenger.ui.PermissionsFragment"
               android:label="PermissionsFragment">
         <action android:id="@+id/action_permissionsFragment_to_messengesFragment"
-                app:destination="@id/messengesFragment" tools:layout="@layout/frag_permissions"/>
+                app:destination="@id/messengesFragment"
+                tools:layout="@layout/frag_permissions"/>
         <action android:id="@+id/action_permissionsFragment_to_individualMessageFragment"
                 app:destination="@id/individualMessageFragment"/>
         <argument android:name="permission" app:argType="String" android:defaultValue="sms"/>

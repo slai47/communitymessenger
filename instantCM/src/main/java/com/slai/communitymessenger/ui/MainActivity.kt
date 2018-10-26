@@ -1,5 +1,6 @@
 package com.slai.communitymessenger.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,7 +10,10 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
+import com.slai.communitymessenger.model.events.OnActivityResultEvent
+import com.slai.communitymessenger.model.events.OnRequestPermissionsResultEvent
 import kotlinx.android.synthetic.main.frag_messages.*
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +22,12 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.MODE_NIGHT_AUTO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val manager = SMSHandler(this)
+        if(!manager.isSMSPermissionGranted()){
+            val bundle = Bundle()
+            bundle.putString(PermissionsFragment.ARG_PERMISSION, PermissionsFragment.EXTRA_SMS)
+            findNavController(R.id.my_nav_host_fragment).navigate(R.id.action_messengesFragment_to_permissionsFragment, bundle)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -44,11 +54,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val manager = SMSHandler(this)
-        if(!manager.isSMSPermissionGranted()){
-            val bundle = Bundle()
-            bundle.putString(PermissionsFragment.ARG_PERMISSION, PermissionsFragment.EXTRA_SMS)
-            findNavController(R.id.my_nav_host_fragment).navigate(R.id.action_messengesFragment_to_permissionsFragment, bundle)
-        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        EventBus.getDefault().post(OnRequestPermissionsResultEvent(requestCode, permissions, grantResults))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+//        EventBus.getDefault().post(OnActivityResultEvent(requestCode, resultCode, data))
     }
 }

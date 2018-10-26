@@ -25,8 +25,8 @@ class OpenBar(val view : View) {
 
     var duration : Int = Snackbar.LENGTH_SHORT
     lateinit var message : String
-    lateinit var actionText : String
-    lateinit var actionListener : View.OnClickListener
+    var actionText : String? = null
+    var actionListener : View.OnClickListener? = null
 
     fun with(message : String) : OpenBar{
         this.message = message
