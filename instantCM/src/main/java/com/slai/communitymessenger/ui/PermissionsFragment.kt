@@ -2,8 +2,6 @@ package com.slai.communitymessenger.ui
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,18 +9,14 @@ import android.provider.Telephony
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
-import com.slai.communitymessenger.model.events.OnActivityResultEvent
-import com.slai.communitymessenger.model.events.OnRequestPermissionsResultEvent
 import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.frag_permissions.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.lang.StringBuilder
 
 
 class PermissionsFragment: Fragment(){
@@ -42,7 +36,6 @@ class PermissionsFragment: Fragment(){
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
         initView()
     }
 
@@ -90,11 +83,6 @@ class PermissionsFragment: Fragment(){
         }
     }
 
-    @Subscribe
-    fun onRequestPermissionResultEvent(event : OnRequestPermissionsResultEvent){
-        onRequestPermissionsResult(event.requestCode, event.permissions, event.grantResults)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -138,11 +126,6 @@ class PermissionsFragment: Fragment(){
         // permissions this app might request
     }
 
-    @Subscribe
-    fun onActivityResultEvent(event : OnActivityResultEvent){
-        onActivityResult(event.requestCode, event.resultCode, event.data)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
@@ -164,10 +147,5 @@ class PermissionsFragment: Fragment(){
                 Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        EventBus.getDefault().unregister(this)
     }
 }

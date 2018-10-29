@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.slai.communitymessenger.R
-import org.greenrobot.eventbus.EventBus
 
 class IndividualMessageFragment : Fragment(){
 
@@ -27,13 +26,13 @@ class IndividualMessageFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
+//        EventBus.getDefault().register(this)
 
         // find SMS per this thread
     }
 
     override fun onPause() {
         super.onPause()
-        EventBus.getDefault().unregister(this)
+//        EventBus.getDefault().unregister(this)
     }
 }

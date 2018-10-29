@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -26,6 +27,12 @@ class MessagesAdapter(val context : Context, val list : List<Message>) : Recycle
         val item : Message = list.get(position)
         holder.primary.text = item.sender
         holder.secondary.text = item.body
+
+
+        holder.date.text = item.time
+
+
+
         holder.itemView.setOnClickListener { v ->
             OpenBar.on(v).with("hello").duration(Snackbar.LENGTH_SHORT).show()
         }
@@ -36,4 +43,6 @@ class MessagesViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
     val primary : TextView = view.list_messaage_title
     val secondary : TextView = view.list_message_body
+    val date : TextView = view.list_message_date
+    val image : ImageView = view.list_message_image
 }

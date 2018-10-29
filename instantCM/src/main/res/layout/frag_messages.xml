@@ -34,15 +34,40 @@
 		</com.google.android.material.appbar.CollapsingToolbarLayout>
 	</com.google.android.material.appbar.AppBarLayout>
 
-	<include layout="@layout/content_main"/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		>
+
+		<androidx.recyclerview.widget.RecyclerView
+				tools:showIn="@layout/activity_main"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:id="@+id/main_list">
+
+		</androidx.recyclerview.widget.RecyclerView>
+
+		<ProgressBar
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:id="@+id/messages_progress"
+				android:indeterminate="true"
+				tools:visibility="visible"
+				android:visibility="gone"
+				android:layout_centerHorizontal="true"
+				android:layout_alignParentTop="true"
+				android:layout_marginTop="100dp"/>
+
+	</RelativeLayout>
 
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
 			android:id="@+id/fab"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/fab_margin"
-			app:layout_anchor="@id/app_bar"
-			app:layout_anchorGravity="bottom|end"
-			app:srcCompat="@android:drawable/ic_dialog_email"/>
+			app:srcCompat="@android:drawable/ic_dialog_email"
+			android:layout_gravity="bottom|end"
+	/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

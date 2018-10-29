@@ -1,8 +1,11 @@
 package com.slai.communitymessenger.utils
 
-import android.content.Context
+import android.os.Build
+import android.text.Html
+import android.text.Spanned
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
+import com.slai.communitymessenger.utils.OpenBar.Companion.on
 
 /**
  * Snackbar creator that uses the [on] method to set the view to attach to.
@@ -54,10 +57,20 @@ class OpenBar(val view : View) {
     }
 
     fun show(){
-        val snack : Snackbar = Snackbar.make(view, message, duration)
+        Html.fromHtml("<font color=\"#ffffff\">Tap to open</font>")
+        val snack : Snackbar = Snackbar.make(view, createText(message), duration)
         if(actionText != null && actionListener != null)
             snack.setAction(actionText, actionListener)
+
         snack.show()
+    }
+
+    private fun createText(text: String): Spanned {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml("<font color=\"#ffffff\">$text</font>", Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(text);
+        }
     }
 
 }

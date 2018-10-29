@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.provider.Telephony
 import android.telephony.SmsManager
 import androidx.core.app.ActivityCompat
@@ -20,27 +19,33 @@ class SMSHandler (val context : Context){
         val manager = SmsManager.getDefault()
         manager.sendTextMessage(phoneNumber, null, message, null, null)
     }
+    fun sendMMS(phoneNumber: String, message: String) {
+        val manager = SmsManager.getDefault()
+        val parts = manager.divideMessage(message)
+        manager.sendMultipartTextMessage(phoneNumber, null, parts, null , null)
+    }
 
     fun getSMSList() : List<Message>{
         val list = ArrayList<Message>()
         // Get texts here
         var objSms : Message
-        val message = Uri.parse("content://sms/inbox")
         // content://sms/sent
         // contetn://sms/draft
         val cr = context.contentResolver
-
-        val c = cr.query(message, null, null, null, null)
+        val columns = arrayOf(Telephony.Sms.THREAD_ID, Telephony.Sms.ADDRESS, Telephony.Sms.DATE, Telephony.Sms.BODY, Telephony.Sms.TYPE, Telephony.Sms.READ, Telephony.Sms.PERSON)
+        val c = cr.query(
+            Telephony.Sms.Inbox.CONTENT_URI, columns, null, null, null)
         val totalSMS = c.count
+
 
         if (c.moveToFirst()) {
             for (i in 0 until totalSMS) {
 
-                var id = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.THREAD_ID))
-                var address = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
-                var body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
-                var state = c.getString(c.getColumnIndex(Telephony.Sms.READ))
-                var date = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
+                val id = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.THREAD_ID))
+                val address = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
+                val body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
+                val state = c.getString(c.getColumnIndex(Telephony.Sms.READ))
+                val date = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
                 var folder : String
                 if (c.getString(c.getColumnIndexOrThrow(Telephony.Sms.TYPE)).contains("1")) {
                     folder = "inbox"

@@ -10,10 +10,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
-import com.slai.communitymessenger.model.events.OnActivityResultEvent
-import com.slai.communitymessenger.model.events.OnRequestPermissionsResultEvent
 import kotlinx.android.synthetic.main.frag_messages.*
-import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,17 +49,11 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp()
             = findNavController(R.id.my_nav_host_fragment).navigateUp()
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        EventBus.getDefault().post(OnRequestPermissionsResultEvent(requestCode, permissions, grantResults))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        EventBus.getDefault().post(OnActivityResultEvent(requestCode, resultCode, data))
     }
 }

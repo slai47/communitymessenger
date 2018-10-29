@@ -1,19 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="horizontal"
 			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+			  android:layout_height="wrap_content"
+			android:padding="10dp"
+>
 
-	<TextView
-			android:text="TextView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/list_messaage_title"
-			android:textAppearance="@style/CMText.Primary"/>
-	<TextView
-			android:text="TextView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/list_message_body"
-			android:textAppearance="@style/CMText.Secondary"/>
-</LinearLayout>
+	<ImageView
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:src="@color/colorPrimary"
+			android:padding="5dp"
+			android:id="@+id/list_message_image"
+	/>
+
+	<LinearLayout android:layout_width="wrap_content"
+				  android:layout_height="wrap_content"
+				android:orientation="vertical"
+				  android:layout_gravity="center"
+				  android:layout_toRightOf="@+id/list_message_image"
+	>
+		<TextView
+				android:text="TextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/list_messaage_title"
+				android:textAppearance="@style/CMText.Primary"/>
+		<TextView
+				android:text="TextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/list_message_body"
+				android:textAppearance="@style/CMText.Secondary"
+				android:layout_marginTop="3dp"
+				android:layout_marginStart="3dp"
+				android:maxLines="2"
+		/>
+	</LinearLayout>
+
+	<TextView android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+				android:id="@+id/list_message_date"
+			  style="@style/CMText.Small"
+			  android:text="A few minutes ago"
+			  android:layout_alignParentRight="true"
+		/>
+
+
+</RelativeLayout>

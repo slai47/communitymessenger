@@ -15,7 +15,7 @@ import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import com.slai.communitymessenger.ui.adapters.MessagesAdapter
 import com.slai.communitymessenger.utils.OpenBar
-import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.frag_messages.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -35,12 +35,11 @@ class MessengesFragment : Fragment() {
 
         if (storedList == null) {
             messages_progress.visibility = View.VISIBLE
-            Thread {
-                Runnable {
-                    val list: List<Message> = SMSHandler(activity!!.applicationContext).getSMSList()
-                    EventBus.getDefault().post(list)
-                }
+            val thread = Thread {
+                val list: List<Message> = SMSHandler(activity!!.applicationContext).getSMSList()
+                EventBus.getDefault().post(list)
             }
+            thread.start()
         } else {
             messages_progress.visibility = View.GONE
         }
@@ -58,7 +57,7 @@ class MessengesFragment : Fragment() {
             bundle.putString(IndividualMessageFragment.ARG_ID, event.sender)
             Navigation.findNavController(main_list).navigate(R.id.action_messengesFragment_to_individualMessageFragment, bundle)
         }
-        OpenBar.on(main_list).with(event.sender + " " + event.body).duration(Snackbar.LENGTH_SHORT).withAction("Reply", listener).show()
+        OpenBar.on(main_list).with(event.sender + "\n" + event.body).duration(Snackbar.LENGTH_LONG).withAction("Reply", listener).show()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

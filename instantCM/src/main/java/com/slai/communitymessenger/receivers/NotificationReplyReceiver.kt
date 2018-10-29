@@ -4,10 +4,12 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import com.slai.communitymessenger.R
+import com.slai.communitymessenger.handlers.NotificationHandler
 
 
 class NotificationReplyReceiver : BroadcastReceiver() {
@@ -22,10 +24,16 @@ class NotificationReplyReceiver : BroadcastReceiver() {
 
             // update notification
 
-            var service : NotificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val service : NotificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            val builder = NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+            val builder: NotificationCompat.Builder
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                builder = NotificationCompat.Builder(context, NotificationHandler.CHANNEL_ID)
+            } else {
+                builder = NotificationCompat.Builder(context)
+            }
+
+            builder.setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentText("Sent")
 
             service.notify(SMSBroadcastReceiver.NOTIFICATION_ID, builder.build())
