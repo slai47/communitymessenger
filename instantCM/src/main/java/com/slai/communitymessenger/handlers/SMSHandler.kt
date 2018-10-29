@@ -2,13 +2,18 @@ package com.slai.communitymessenger.handlers
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.Telephony
 import android.telephony.SmsManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.slai.communitymessenger.model.Message
+
+
 
 class SMSHandler (val context : Context){
     companion object {
@@ -67,6 +72,33 @@ class SMSHandler (val context : Context){
         return list
     }
 
+
+    fun markMessageRead(number: String, body: String) {
+        val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null)
+        try {
+
+            while (cursor!!.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex("address")) == number
+                    && cursor.getInt(cursor.getColumnIndex("read")) == 0
+                    && cursor.getString(cursor.getColumnIndex("body")).startsWith(body)
+                ) {
+                    val SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"))
+                    val values = ContentValues()
+                    values.put("read", true)
+                    context.contentResolver.update(
+                        Uri.parse("content://sms/inbox"),
+                        values,
+                        "_id=$SmsMessageId",
+                        null
+                    )
+                    return
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Mark Read", "Error in Read: " + e.toString())
+        }
+
+    }
 
     // Permission Code
 

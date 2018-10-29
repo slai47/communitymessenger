@@ -141,7 +141,7 @@ class PermissionsFragment: Fragment(){
         val permission = arguments?.getString("permission")
         when(permission){
             "sms" -> {
-                OpenBar.on(permissionsFragment).with("This is required. So... By?").duration(OpenBar.INDEFINITELY).show()
+                OpenBar.on(permissionsFragment).with("This is required. So... By?").durationInfinite().show()
             }
             "camera" -> {
                 Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)

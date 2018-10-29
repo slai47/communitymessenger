@@ -46,6 +46,21 @@ class OpenBar(val view : View) {
         return this
     }
 
+    fun durationLong() : OpenBar {
+        this.duration = Snackbar.LENGTH_LONG
+        return this
+    }
+
+    fun durationShort() : OpenBar {
+        this.duration = Snackbar.LENGTH_SHORT
+        return this
+    }
+
+    fun durationInfinite() : OpenBar {
+        this.duration = Snackbar.LENGTH_INDEFINITE
+        return this
+    }
+
     fun withAction(text : String, listener : View.OnClickListener) : OpenBar{
         actionText = text
         actionListener = listener

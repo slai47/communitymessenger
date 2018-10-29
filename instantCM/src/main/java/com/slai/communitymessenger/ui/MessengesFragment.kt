@@ -57,7 +57,7 @@ class MessengesFragment : Fragment() {
             bundle.putString(IndividualMessageFragment.ARG_ID, event.sender)
             Navigation.findNavController(main_list).navigate(R.id.action_messengesFragment_to_individualMessageFragment, bundle)
         }
-        OpenBar.on(main_list).with(event.sender + "\n" + event.body).duration(Snackbar.LENGTH_LONG).withAction("Reply", listener).show()
+        OpenBar.on(main_list).with(event.sender + "\n" + event.body).durationLong().withAction("Reply", listener).show()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

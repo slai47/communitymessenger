@@ -30,9 +30,18 @@
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
+    <style name="CMText.Primary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="CMText.Secondary">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <style name="CMText.Secondary.Bold">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CMText.Small">
