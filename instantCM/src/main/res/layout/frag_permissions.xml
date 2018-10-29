@@ -5,5 +5,58 @@
                 android:padding="40dp"
 				android:background="@color/permissions_background"
 				android:id="@+id/permissionsFragment"
+				xmlns:tools="http://schemas.android.com/tools"
 >
+
+	<androidx.cardview.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+		>
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:padding="15dp">
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/frag_permission_title"
+					style="@style/CMText.Title"
+					android:text="@string/permission_request"
+			/>
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/frag_permission_message"
+					style="@style/CMText.Primary"
+					tools:text="Title"
+					android:layout_marginTop="5dp"
+					android:layout_marginBottom="5dp"
+			/>
+			<LinearLayout android:layout_width="wrap_content"
+						  android:layout_height="wrap_content"
+						  android:orientation="horizontal"
+						  android:layout_gravity="right|end"
+			>
+				<Button
+						android:text="Cancel"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:id="@+id/frag_permission_cancel"
+						android:textColor="@color/colorAccent"
+						android:background="@color/transparent"
+				/>
+
+				<Button
+						android:text="Ok"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:id="@+id/frag_permission_ok"
+						android:textColor="@color/colorAccent"
+						android:background="@color/transparent"
+				/>
+			</LinearLayout>
+		</LinearLayout>
+	</androidx.cardview.widget.CardView>
 </RelativeLayout>

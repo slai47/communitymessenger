@@ -61,12 +61,10 @@ class PermissionsFragment: Fragment(){
 
         val manager = SMSHandler(permissionsFragment.context)
         if(!manager.isSMSPermissionGranted()){
-            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-            builder.setTitle("Permission Request")
-            builder.setMessage(alertMessage.toString())
-            builder.setCancelable(false)
-            builder.setPositiveButton("Ok"){ dialogInterface: DialogInterface, i: Int ->
-                val permission = arguments?.getString("permission")
+
+            frag_permission_message.text = alertMessage.toString()
+
+            frag_permission_ok.setOnClickListener {
                 when(permission){
                     EXTRA_SMS -> {
                         requestPermissions(
@@ -83,10 +81,10 @@ class PermissionsFragment: Fragment(){
                 }
             }
 
-            builder.setNegativeButton("No"){ dialogInterface: DialogInterface, i: Int ->
+            frag_permission_cancel.setOnClickListener {
                 cancelled()
             }
-            builder.show()
+
         } else {
             Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_messengesFragment)
         }
