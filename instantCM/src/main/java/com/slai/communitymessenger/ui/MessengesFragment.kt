@@ -67,7 +67,7 @@ class MessengesFragment : Fragment() {
     private fun loadMessages(messages : Map<String, Message>) {
         storedList = messages
 
-        val adapter = MessagesAdapter(activity!!.applicationContext, messages.values as ArrayList)
+        val adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values) )
 
         val manager = LinearLayoutManager(main_list.context, RecyclerView.VERTICAL, false)
 

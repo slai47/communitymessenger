@@ -118,7 +118,7 @@ class SMSHandler (val context : Context){
         val cr = context.contentResolver
         val columns = arrayOf(Telephony.Sms.THREAD_ID, Telephony.Sms.ADDRESS, Telephony.Sms.DATE, Telephony.Sms.BODY, Telephony.Sms.TYPE, Telephony.Sms.READ, Telephony.Sms.PERSON)
 
-        val selection = if(threadId != null) "thread_id={$threadId}" else null
+        val selection = if(threadId != null) "thread_id=$threadId" else null
 
         val c = cr.query(
             uri, columns, selection, null, null)
@@ -139,7 +139,7 @@ class SMSHandler (val context : Context){
 
 
     fun markMessageRead(number: String, body: String) {
-        val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null)
+        val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, "address=$number", null, null)
         try {
 
             while (cursor!!.moveToNext()) {

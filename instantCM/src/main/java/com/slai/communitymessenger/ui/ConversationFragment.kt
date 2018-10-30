@@ -48,6 +48,8 @@ class ConversationFragment : Fragment(){
                 EventBus.getDefault().post(list)
             }
             thread.start()
+        } else {
+            setupView(stored!!)
         }
     }
 
