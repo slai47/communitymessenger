@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +12,12 @@ import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.ui.adapters.ConversationAdapter
-import kotlinx.android.synthetic.main.frag_single_messages.*
+import kotlinx.android.synthetic.main.frag_conversation.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class IndividualMessageFragment : Fragment(){
+class ConversationFragment : Fragment(){
 
     companion object {
         @JvmField val ARG_ID = "id"
@@ -29,7 +28,7 @@ class IndividualMessageFragment : Fragment(){
     private var stored : List<Message>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_single_messages, container, false)
+        return inflater.inflate(R.layout.frag_conversation, container, false)
     }
 
     override fun onStart() {

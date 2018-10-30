@@ -14,7 +14,8 @@ import com.slai.communitymessenger.R
 import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.list_message.view.*
-
+import java.text.DateFormat
+import java.util.*
 
 
 class MessagesAdapter(val context : Context, val list : List<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
@@ -34,7 +35,9 @@ class MessagesAdapter(val context : Context, val list : List<Message>) : Recycle
         holder.primary.text = item.sender
         holder.secondary.text = item.body
 
-        holder.date.text = item.time
+        val date : Date = Date(item.time)
+        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)
+        holder.date.text = dateFormat.format(date)
 
         if(!item.readState){
             holder.unread()
@@ -49,6 +52,7 @@ class MessagesAdapter(val context : Context, val list : List<Message>) : Recycle
             // mark as read
 
             // use thread id or send number for sending to individual messages
+
         }
     }
 }
@@ -62,7 +66,6 @@ class MessagesViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
     fun unread(){
         val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
-
         primary.typeface = boldTypeface
         secondary.typeface = boldTypeface
         date.typeface = boldTypeface

@@ -41,7 +41,7 @@ class PermissionsFragment: Fragment(){
 
     private fun initView() {
         val permission = arguments?.getString("permission")
-        val alertMessage : StringBuilder = StringBuilder()
+        val alertMessage = StringBuilder()
         when(permission){
             "sms" -> {
                 alertMessage.append("Community Messenger needs Permissions to see your SMS in order to work.")
@@ -110,7 +110,7 @@ class PermissionsFragment: Fragment(){
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // SMS related task you need to do.
-                    Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)
+                    Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_conversationFragment)
 
                 } else {
                     // permission denied, boo! Disable the
@@ -144,7 +144,7 @@ class PermissionsFragment: Fragment(){
                 OpenBar.on(permissionsFragment).with("This is required. So... By?").durationInfinite().show()
             }
             "camera" -> {
-                Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_individualMessageFragment)
+                Navigation.findNavController(permissionsFragment).navigate(R.id.action_permissionsFragment_to_conversationFragment)
             }
         }
     }

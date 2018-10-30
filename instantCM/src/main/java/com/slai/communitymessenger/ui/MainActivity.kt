@@ -48,12 +48,4 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp()
             = findNavController(R.id.my_nav_host_fragment).navigateUp()
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 }
