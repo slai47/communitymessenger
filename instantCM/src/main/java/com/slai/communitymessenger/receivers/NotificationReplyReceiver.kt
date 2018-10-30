@@ -33,7 +33,7 @@ class NotificationReplyReceiver : BroadcastReceiver() {
                 builder = NotificationCompat.Builder(context)
             }
 
-            builder.setSmallIcon(R.drawable.ic_launcher_foreground)
+            builder.setSmallIcon(R.drawable.shape_notification)
                 .setContentText("Sent")
 
             service.notify(SMSBroadcastReceiver.NOTIFICATION_ID, builder.build())
