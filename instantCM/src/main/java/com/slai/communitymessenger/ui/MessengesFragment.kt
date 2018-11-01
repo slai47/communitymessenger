@@ -41,6 +41,7 @@ class MessengesFragment : Fragment() {
             thread.start()
         } else {
             messages_progress.visibility = View.GONE
+            loadMessages(storedList!!)
         }
     }
 

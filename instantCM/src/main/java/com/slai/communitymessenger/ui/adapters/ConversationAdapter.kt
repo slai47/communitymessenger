@@ -15,6 +15,7 @@ import java.util.*
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.LayoutInflater
 import com.slai.communitymessenger.utils.OpenBar
 
 
@@ -29,7 +30,7 @@ class ConversationAdapter(val context : Activity, val list : List<Message>) : Re
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
-        return ConversationViewHolder(View.inflate(parent.context, R.layout.list_conversation, parent))
+        return ConversationViewHolder(LayoutInflater.from(context).inflate(R.layout.list_conversation, parent, false))
     }
 
     override fun getItemCount(): Int {

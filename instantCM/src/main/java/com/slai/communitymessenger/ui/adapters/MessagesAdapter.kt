@@ -10,20 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.ui.ConversationFragment
-import com.slai.communitymessenger.ui.PermissionsFragment
-import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.list_message.view.*
 import java.text.DateFormat
 import java.util.*
-import kotlin.math.acos
 
 
 class MessagesAdapter(val context : Context, val list : List<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
@@ -65,7 +59,8 @@ class MessagesAdapter(val context : Context, val list : List<Message>) : Recycle
             SMSHandler(v.context).markMessageRead(item.sender, item.body)
             // use thread id or send number for sending to individual messages
             val bundle = Bundle()
-            bundle.putString(ConversationFragment.ARG_ID, item!!.id)
+            bundle.putString(ConversationFragment.ARG_ID, item.id)
+            bundle.putString(ConversationFragment.ARG_TITLE, item.sender)
             Navigation.findNavController(v).navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
 
             list[tempHolder.position!!].readState = true

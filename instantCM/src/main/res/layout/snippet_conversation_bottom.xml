@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+		xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_margin="7dp"
+		style="@style/CMCardView"
+		tools:showIn="@layout/frag_conversation">
+
+	<RelativeLayout android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:orientation="vertical"
+		>
+		<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textPersonName"
+				android:text=""
+				android:id="@+id/conversation_text"
+				android:maxLines="5"
+				tools:text="Test Text for testing the testing"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:imeOptions="actionSend"
+				android:layout_toLeftOf="@+id/conversation_send"
+				android:layout_toStartOf="@+id/conversation_send"
+		/>
+		<androidx.appcompat.widget.AppCompatImageView
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				app:srcCompat="@color/colorPrimaryDark"
+				android:id="@+id/conversation_send"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_centerVertical="true"
+				android:padding="10dp"
+		/>
+
+	</RelativeLayout>
+
+</androidx.cardview.widget.CardView>
