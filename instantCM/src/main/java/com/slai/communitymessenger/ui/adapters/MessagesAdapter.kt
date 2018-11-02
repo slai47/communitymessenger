@@ -61,6 +61,8 @@ class MessagesAdapter(val context : Context, val list : List<Message>) : Recycle
             val bundle = Bundle()
             bundle.putString(ConversationFragment.ARG_ID, item.id)
             bundle.putString(ConversationFragment.ARG_TITLE, item.sender)
+            bundle.putString(ConversationFragment.ARG_NUMBER, item.sender)
+            bundle.putString(ConversationFragment.ARG_TYPE, ConversationFragment.TYPE_FULL)
             Navigation.findNavController(v).navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
 
             list[tempHolder.position!!].readState = true

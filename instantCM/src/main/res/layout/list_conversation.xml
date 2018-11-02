@@ -13,6 +13,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/list_conversation_text"
 			style="@style/CMText.Primary"
+			android:textColor="@color/white"
 			android:background="@drawable/shape_conversation_transparent"
 			android:padding="10dp"
 		/>

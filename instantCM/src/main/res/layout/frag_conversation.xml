@@ -34,6 +34,7 @@
 					android:layout_height="wrap_content"
 					tools:text="6163334444"
 					style="@style/CMText.Title"
+					android:textColor="@color/textPrimary"
 					android:id="@+id/conversation_title"
 					android:layout_toRightOf="@+id/conversation_back"
 					android:layout_centerVertical="true"

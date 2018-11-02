@@ -17,9 +17,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
 import com.slai.communitymessenger.utils.OpenBar
+import kotlin.collections.ArrayList
 
 
-class ConversationAdapter(val context : Activity, val list : List<Message>) : RecyclerView.Adapter<ConversationViewHolder>() {
+class ConversationAdapter(val context : Activity, val list : ArrayList<Message>) : RecyclerView.Adapter<ConversationViewHolder>() {
 
     var width : Int
 

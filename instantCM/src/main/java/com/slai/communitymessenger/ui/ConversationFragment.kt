@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +22,7 @@ import kotlinx.android.synthetic.main.snippet_conversation_bottom.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class ConversationFragment : Fragment(){
 
@@ -31,6 +31,9 @@ class ConversationFragment : Fragment(){
         @JvmField val ARG_TITLE = "title"
         @JvmField val ARG_TYPE = "type"
         @JvmField val ARG_NUMBER = "number"
+
+        @JvmField val TYPE_FULL = "full"
+        @JvmField val TYPE_SHORT = "short"
     }
 
     private var type : String = ""
@@ -38,7 +41,7 @@ class ConversationFragment : Fragment(){
     private var title : String = ""
     private var phoneNumber : String = ""
 
-    private var stored : List<Message>? = null
+    private var stored : ArrayList<Message>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_conversation, container, false)
@@ -56,11 +59,13 @@ class ConversationFragment : Fragment(){
         super.onResume()
         EventBus.getDefault().register(this)
 
+        conversation_title.text = title
+
         // find SMS per this thread
         if(stored == null) {
             conversation_progress.visibility = View.VISIBLE
             val thread = Thread {
-                val list: List<Message> = SMSHandler(activity!!.applicationContext).getIndividualThread(threadId)
+                val list: ArrayList<Message> = SMSHandler(activity!!.applicationContext).getIndividualThread(threadId) as ArrayList<Message>
                 EventBus.getDefault().post(list)
             }
             thread.start()
@@ -105,7 +110,9 @@ class ConversationFragment : Fragment(){
                 // Send Text
                 SMSHandler(it.context).sendSMS(phoneNumber, getText())
                 // update list
-
+                val adapter : ConversationAdapter = conversation_list.adapter as ConversationAdapter
+                adapter.list.add(Message(getText(), "", true, Calendar.getInstance().timeInMillis, "sent", "", ""))
+                adapter.notifyItemInserted(adapter.list.size)
                 // clear text
                 conversation_text.setText("")
             }
@@ -133,13 +140,13 @@ class ConversationFragment : Fragment(){
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceive(list : List<Message>){
+    fun onReceive(list : ArrayList<Message>){
         if(list.isNotEmpty() && list[0].id == threadId){
             setupView(list)
         }
     }
 
-    fun setupView(list: List<Message>){
+    fun setupView(list: ArrayList<Message>){
         stored = list
 
         val adapter = ConversationAdapter(activity as Activity, list)
