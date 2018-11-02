@@ -2,8 +2,10 @@ package com.slai.communitymessenger.handlers
 
 import android.Manifest
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -13,7 +15,10 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.slai.communitymessenger.model.Message
+import com.slai.communitymessenger.receivers.DeliveryReceiver
+import com.slai.communitymessenger.receivers.SentReceiver
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SMSHandler (val context : Context){
@@ -23,13 +28,28 @@ class SMSHandler (val context : Context){
 
     fun sendSMS(phoneNumber: String, message: String) {
         val manager = SmsManager.getDefault()
-        manager.sendTextMessage(phoneNumber, null, message, null, null)
+        val split = manager.divideMessage(message)
+        val sentIntent : Intent = Intent(context, SentReceiver::class.java)
+        sentIntent.putExtra("phoneNumber", phoneNumber)
+        val pendingSent = PendingIntent.getBroadcast(context, 0, sentIntent, 0)
+
+        val deliveryReceiver = Intent(context, DeliveryReceiver::class.java)
+        deliveryReceiver.putExtra("phoneNumber", phoneNumber)
+        val pendingDelivery = PendingIntent.getBroadcast(context, 0, sentIntent, 0)
+
+        if(split.size == 1)
+            manager.sendTextMessage(phoneNumber, null, message, pendingSent, pendingDelivery)
+        else {
+            val sentList = ArrayList<PendingIntent>()
+            val deliveryList = ArrayList<PendingIntent>()
+            for(i in 0 until split.size){
+                sentList.add(pendingSent)
+                deliveryList.add(pendingDelivery)
+            }
+            manager.sendMultipartTextMessage(phoneNumber, null, split, sentList, deliveryList)
+        }
     }
-    fun sendMMS(phoneNumber: String, message: String) {
-        val manager = SmsManager.getDefault()
-        val parts = manager.divideMessage(message)
-        manager.sendMultipartTextMessage(phoneNumber, null, parts, null , null)
-    }
+
 
     fun getLastestSMSList() : Map<String, Message>{
        val list = HashMap<String, Message>()

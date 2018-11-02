@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.model.Message
+import com.slai.communitymessenger.model.events.SMSDeliverEvent
+import com.slai.communitymessenger.model.events.SMSSentEvent
 import com.slai.communitymessenger.ui.adapters.ConversationAdapter
 import kotlinx.android.synthetic.main.frag_conversation.*
 import kotlinx.android.synthetic.main.snippet_conversation_bottom.*
@@ -27,10 +29,14 @@ class ConversationFragment : Fragment(){
     companion object {
         @JvmField val ARG_ID = "id"
         @JvmField val ARG_TITLE = "title"
+        @JvmField val ARG_TYPE = "type"
+        @JvmField val ARG_NUMBER = "number"
     }
 
+    private var type : String = ""
     private var threadId : String = ""
     private var title : String = ""
+    private var phoneNumber : String = ""
 
     private var stored : List<Message>? = null
 
@@ -42,6 +48,8 @@ class ConversationFragment : Fragment(){
         super.onStart()
         threadId = arguments!!.getString(ARG_ID)
         title = arguments!!.getString(ARG_TITLE)
+        type = arguments!!.getString(ARG_TYPE)
+        phoneNumber = arguments!!.getString(ARG_NUMBER)
     }
 
     override fun onResume() {
@@ -95,7 +103,7 @@ class ConversationFragment : Fragment(){
         conversation_send.setOnClickListener {
             if(!TextUtils.isEmpty(getText())){
                 // Send Text
-
+                SMSHandler(it.context).sendSMS(phoneNumber, getText())
                 // update list
 
                 // clear text
@@ -146,5 +154,15 @@ class ConversationFragment : Fragment(){
 
     fun getText() : String {
         return conversation_text.text.trim() as String
+    }
+
+    @Subscribe
+    fun onSentReceive(event : SMSSentEvent){
+
+    }
+
+    @Subscribe
+    fun onDeliverEvent(event : SMSDeliverEvent){
+
     }
 }
