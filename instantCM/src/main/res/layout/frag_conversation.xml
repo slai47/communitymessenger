@@ -15,14 +15,33 @@
 			android:padding="5dp"
 			style="@style/CMCardView"
 		>
-		<androidx.appcompat.widget.Toolbar
+
+		<RelativeLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:theme="?attr/actionBarTheme"
-				android:minHeight="?attr/actionBarSize"
-				android:id="@+id/toolbar"
-		/>
+		>
+			<androidx.appcompat.widget.AppCompatImageView
+					android:layout_width="50dp"
+					android:layout_height="50dp"
+					android:padding="12dp"
+					xmlns:app="http://schemas.android.com/apk/res-auto"
+					app:srcCompat="@drawable/ic_back_arrow"
+					android:id="@+id/conversation_back"
+			/>
 
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					tools:text="6163334444"
+					style="@style/CMText.Title"
+					android:id="@+id/conversation_title"
+					android:layout_toRightOf="@+id/conversation_back"
+					android:layout_centerVertical="true"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:maxLines="2"
+			/>
+		</RelativeLayout>
 	</androidx.cardview.widget.CardView>
 
 	<androidx.recyclerview.widget.RecyclerView

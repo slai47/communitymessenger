@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
@@ -43,10 +42,6 @@ class ConversationFragment : Fragment(){
         super.onStart()
         threadId = arguments!!.getString(ARG_ID)
         title = arguments!!.getString(ARG_TITLE)
-        val act = activity as AppCompatActivity
-        act.setSupportActionBar(toolbar)
-        act.actionBar.setDisplayHomeAsUpEnabled(true)
-        act.actionBar.title = title
     }
 
     override fun onResume() {
@@ -111,8 +106,8 @@ class ConversationFragment : Fragment(){
         conversation_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 conversation_send.setImageResource(
-                    if(!TextUtils.isEmpty(getText())) R.color.colorPrimary
-                    else R.color.colorPrimaryDark)
+                    if(!TextUtils.isEmpty(getText())) R.drawable.ic_send
+                    else R.drawable.ic_photo)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

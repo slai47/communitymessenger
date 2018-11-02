@@ -21,21 +21,24 @@
 				android:id="@+id/conversation_text"
 				android:maxLines="5"
 				tools:text="Test Text for testing the testing"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
 				android:imeOptions="actionSend"
 				android:layout_toLeftOf="@+id/conversation_send"
 				android:layout_toStartOf="@+id/conversation_send"
+				android:layout_centerVertical="true"
+				android:hint="@string/send_a_message"
 		/>
-		<androidx.appcompat.widget.AppCompatImageView
-				android:layout_width="50dp"
-				android:layout_height="50dp"
-				app:srcCompat="@color/colorPrimaryDark"
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
 				android:id="@+id/conversation_send"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:srcCompat="@drawable/ic_photo"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentEnd="true"
 				android:layout_centerVertical="true"
-				android:padding="10dp"
+				android:layout_margin="7dp"
 		/>
 
 	</RelativeLayout>
