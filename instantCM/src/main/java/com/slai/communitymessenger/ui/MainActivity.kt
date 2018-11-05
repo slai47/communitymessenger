@@ -11,8 +11,11 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
+import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.frag_messages.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,6 +55,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
+    }
+
     override fun onSupportNavigateUp()
             = findNavController(R.id.my_nav_host_fragment).navigateUp()
+
+    @Subscribe
+    fun onNewMessageRecieved(event : SMSReceivedEvent){
+        val currentFrag = supportFragmentManager.findFragmentById(R.id.my_nav_host_fragment)
+        var showPopup = false
+        if(currentFrag != null && currentFrag is ConversationFragment){
+            val messageFrag = currentFrag as ConversationFragment
+            val currentThread = messageFrag.phoneNumber
+            showPopup = event.sender == currentThread
+        } else if(currentFrag is MessengesFragment){
+            showPopup = true
+        }
+
+        if(showPopup){
+            val fragment = ConversationFragment()
+            val bundle = Bundle()
+            bundle.putString(ConversationFragment.ARG_TYPE, ConversationFragment.TYPE_SHORT)
+            bundle.putString(ConversationFragment.ARG_ID, "")
+            bundle.putString(ConversationFragment.ARG_NUMBER, event.sender)
+            bundle.putString(ConversationFragment.ARG_TITLE, "")
+            fragment.arguments = bundle
+
+            supportFragmentManager.beginTransaction().add(R.id.my_nav_host_fragment, fragment).commit()
+        }
+    }
 }
