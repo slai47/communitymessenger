@@ -85,16 +85,19 @@ class SMSHandler (val context : Context){
             uri, columns, null, null, null)
         val totalSMS = c.count
 
-        if (c.moveToFirst()) {
-            for (i in 0 until totalSMS) {
-                val pair = parse(c)
-                val id = pair.first
-                val objSms = pair.second
-                if(!list.containsKey(id))
-                    list[id] = objSms
-                c.moveToNext()
+        c.use { c ->
+            if (c.moveToFirst()) {
+                for (i in 0 until totalSMS) {
+                    val pair = parse(c)
+                    val id = pair.first
+                    val objSms = pair.second
+                    if(!list.containsKey(id))
+                        list[id] = objSms
+                    c.moveToNext()
+                }
             }
         }
+
         return list
     }
 
@@ -111,7 +114,7 @@ class SMSHandler (val context : Context){
         }
         val person = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.PERSON))
 
-        var objSms = Message(body, address, state == "1", date, folder, id, person)
+        val objSms = Message(body, address, state == "1", date, folder, id, person)
         return Pair(id, objSms)
     }
 
@@ -138,51 +141,48 @@ class SMSHandler (val context : Context){
         val cr = context.contentResolver
         val columns = arrayOf(Telephony.Sms.THREAD_ID, Telephony.Sms.ADDRESS, Telephony.Sms.DATE, Telephony.Sms.BODY, Telephony.Sms.TYPE, Telephony.Sms.READ, Telephony.Sms.PERSON)
 
-        val selection = if(threadId != null) "thread_id=$threadId" else null
+        val selection = if(threadId != null) "${Telephony.Sms.THREAD_ID}=$threadId" else null
 
         val c = cr.query(
             uri, columns, selection, null, null)
         val totalSMS = c.count
 
-        if (c.moveToFirst()) {
-            for (i in 0 until totalSMS) {
-                val pair = parse(c)
-                val id = pair.first
-                val objSms = pair.second
-                list.add(objSms)
-                c.moveToNext()
+        c.use { cursor ->
+            if (cursor.moveToFirst()) {
+                for (i in 0 until totalSMS) {
+                    val pair = parse(c)
+                    val id = pair.first
+                    val objSms = pair.second
+                    list.add(objSms)
+                    cursor.moveToNext()
+                }
             }
         }
-
         return list
     }
 
 
     fun markMessageRead(number: String, body: String) {
-        val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, "address=$number", null, null)
-        try {
-
-            while (cursor!!.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex("address")) == number
-                    && cursor.getInt(cursor.getColumnIndex("read")) == 0
-                    && cursor.getString(cursor.getColumnIndex("body")).startsWith(body)
+        val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, "${Telephony.Sms.ADDRESS}=$number", null, null)
+        cursor.use { c ->
+            while (c!!.moveToNext()) {
+                if (c.getString(c.getColumnIndex(Telephony.Sms.ADDRESS)) == number
+                    && c.getInt(c.getColumnIndex(Telephony.Sms.READ)) == 0
+                    && c.getString(c.getColumnIndex(Telephony.Sms.BODY)).startsWith(body)
                 ) {
-                    val SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"))
+                    val SmsMessageId = c.getString(c.getColumnIndex(Telephony.Sms._ID))
                     val values = ContentValues()
-                    values.put("read", true)
+                    values.put(Telephony.Sms.READ, true)
                     context.contentResolver.update(
-                        Uri.parse("content://sms/inbox"),
+                        Telephony.Sms.Inbox.CONTENT_URI,
                         values,
-                        "_id=$SmsMessageId",
+                        "${Telephony.Sms._ID}=$SmsMessageId",
                         null
                     )
                     return
                 }
             }
-        } catch (e: Exception) {
-            Log.e("Mark Read", "Error in Read: " + e.toString())
         }
-
     }
 
     // Permission Code

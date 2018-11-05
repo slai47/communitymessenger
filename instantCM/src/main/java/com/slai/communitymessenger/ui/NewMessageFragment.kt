@@ -37,6 +37,13 @@ class NewMessageFragment : Fragment() {
     }
 
     private fun setupSearchMethod() {
+        // get contact list and keep it local in adapter.
+        // Use the searchContacts in the ContactHandler
+        // Compare and limit the list
+        // When one is clicked, grab the phone number as well by using getContact with the id we already have
+        // Thread it to move quickly with the cursor
+        // Long click should open the profile for that person.
+
         new_message_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
