@@ -64,7 +64,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
         builder.setShowWhen(true)
 
         val replyAction = NotificationCompat.Action.Builder(
-            R.drawable.shape_notification,
+            R.drawable.ic_new_message,
             replyLabel,
             getReplyPendingIntent(context, smsSender)
         )

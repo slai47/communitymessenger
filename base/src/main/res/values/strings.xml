@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Community Messenger</string>
+
+    <string name="attribute_text" translatable="false">back arrow by Morten Halvorsen from the Noun Project\n
+        send by Gregor Cresnar from the Noun Project\n
+        Download by Yana from the Noun Project\n
+        Photo by Emanuele Feletti from the Noun Project\n
+        expand by amante de icono from the Noun Project\n
+        new message by Wing from the Noun Project\n
+        Files by icon 54 from the Noun Project\n
+        Video by Kirsh from the Noun Project\n
+        clock by Dinosoft Labs from the Noun Project\n
+        Stop by projecthayat from the Noun Project</string>
+
 </resources>
