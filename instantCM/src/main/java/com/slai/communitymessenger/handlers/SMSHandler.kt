@@ -51,7 +51,7 @@ class SMSHandler (val context : Context){
     }
 
 
-    fun getLastestSMSList() : Map<String, Message>{
+    fun getLastestSMSList() : HashMap<String, Message>{
        val list = HashMap<String, Message>()
         val inbox = getSMSList(Telephony.Sms.Inbox.CONTENT_URI)
         val sent = getSMSList(Telephony.Sms.Sent.CONTENT_URI)

@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +29,9 @@ import java.util.*
 
 class ConversationFragment : Fragment(){
 
+    private val TAG: String =
+        "ConversationFragment"
+
     companion object {
         @JvmField val ARG_ID = "id"
         @JvmField val ARG_TITLE = "title"
@@ -36,10 +42,10 @@ class ConversationFragment : Fragment(){
         @JvmField val TYPE_SHORT = "short"
     }
 
-    private var type : String = ""
-    private var threadId : String = ""
-    private var title : String = ""
-    private var phoneNumber : String = ""
+    private var type : String? = ""
+    private var threadId : String? = ""
+    private var title : String? = ""
+    var phoneNumber : String = ""
 
     private var stored : ArrayList<Message>? = null
 
@@ -53,6 +59,11 @@ class ConversationFragment : Fragment(){
         title = arguments!!.getString(ARG_TITLE)
         type = arguments!!.getString(ARG_TYPE)
         phoneNumber = arguments!!.getString(ARG_NUMBER)
+        if(type == TYPE_SHORT) {
+            conversation.layoutParams.height = 300 // should be dynamic in the future
+            conversation.gravity = Gravity.BOTTOM
+            conversation_top_area.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -132,6 +143,14 @@ class ConversationFragment : Fragment(){
             }
         })
 
+        if(type == TYPE_SHORT){
+            conversation_send.setImageResource(R.drawable.ic_expand)
+        } else {
+            conversation_send.setImageResource(
+                if(!TextUtils.isEmpty(getText())) R.drawable.ic_send
+                else R.drawable.ic_photo)
+        }
+
     }
 
     override fun onPause() {
@@ -164,12 +183,13 @@ class ConversationFragment : Fragment(){
     }
 
     @Subscribe
-    fun onSentReceive(event : SMSSentEvent){
-
+    fun onSentEvent(event : SMSSentEvent){
+        Log.d(TAG, "onSentEvent")
     }
 
     @Subscribe
     fun onDeliverEvent(event : SMSDeliverEvent){
+        Log.d(TAG, "onDeliverEvent")
 
     }
 }

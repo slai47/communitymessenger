@@ -20,7 +20,7 @@ import java.text.DateFormat
 import java.util.*
 
 
-class MessagesAdapter(val context : Context, val list : List<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
+class MessagesAdapter(val context : Context, var list : List<Message>) : RecyclerView.Adapter<MessagesViewHolder>(){
 
     val TAG : String = "MessagesAdapter"
 

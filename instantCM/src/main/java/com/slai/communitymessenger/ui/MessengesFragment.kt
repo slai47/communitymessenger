@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MessengesFragment : Fragment() {
 
-    var storedList : Map<String, Message>? = null
+    var storedList : HashMap<String, Message>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.frag_messages, container, false)
@@ -34,15 +34,26 @@ class MessengesFragment : Fragment() {
 
         if (storedList == null) {
             messages_progress.visibility = View.VISIBLE
-            val thread = Thread {
-                val list: Map<String, Message> = SMSHandler(activity!!.applicationContext).getLastestSMSList()
-                EventBus.getDefault().post(list)
-            }
-            thread.start()
+            updateSMSList()
         } else {
             messages_progress.visibility = View.GONE
             loadMessages(storedList!!)
         }
+
+        messages_fab.setOnClickListener {
+            val transaction = fragmentManager!!.beginTransaction()
+            transaction.add(R.id.my_nav_host_fragment, NewMessageFragment())
+            transaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down)
+            transaction.commit()
+        }
+    }
+
+    private fun updateSMSList() {
+        val thread = Thread {
+            val list: HashMap<String, Message> = SMSHandler(activity!!.applicationContext).getLastestSMSList()
+            EventBus.getDefault().post(list)
+        }
+        thread.start()
     }
 
     override fun onPause() {
@@ -52,29 +63,32 @@ class MessengesFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSMSReceived(event : SMSReceivedEvent){
-        val listener : View.OnClickListener = View.OnClickListener{ v ->
-            val bundle = Bundle()
-            bundle.putString(ConversationFragment.ARG_ID, event.sender)
-            Navigation.findNavController(main_list).navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
-        }
-        OpenBar.on(main_list).with(event.sender + "\n" + event.body).durationLong().withAction("Reply", listener).show()
+        updateSMSList() // TODO this probably could be optimized. I'm not sure how yet but I feel this could be made better
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onTextLoaded(event : Map<String, Message>) {
+    fun onTextLoaded(event : HashMap<String, Message>) {
         loadMessages(event)
     }
 
-    private fun loadMessages(messages : Map<String, Message>) {
+    private fun loadMessages(messages : HashMap<String, Message>) {
         storedList = messages
+        if(main_list.adapter == null) {
 
-        val adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values) )
+            val adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values))
 
-        val manager = LinearLayoutManager(main_list.context, RecyclerView.VERTICAL, false)
+            val manager = LinearLayoutManager(main_list.context, RecyclerView.VERTICAL, false)
 
-        main_list.layoutManager = manager
-        main_list.adapter = adapter
+            main_list.layoutManager = manager
+            main_list.adapter = adapter
 
-        messages_progress.visibility = View.GONE
+            messages_progress.visibility = View.GONE
+        } else {
+            val array = ArrayList(messages.values)
+            array.sortBy { message -> message.time }
+            val adapter = main_list.adapter as MessagesAdapter
+            adapter.list = array
+            adapter.notifyDataSetChanged()
+        }
     }
 }
