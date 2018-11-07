@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
@@ -69,6 +70,11 @@ class MessagesAdapter(val context : Context, var list : List<Message>) : Recycle
             notifyItemChanged(tempHolder.position!!)
         }
     }
+
+    fun updateList(newList : List<Message>){
+        val result : DiffUtil.DiffResult = DiffUtil.calculateDiff(MessagesDiffCallback(list, newList))
+        result.dispatchUpdatesTo(this)
+    }
 }
 
 class MessagesViewHolder(view : View) : RecyclerView.ViewHolder(view) {
@@ -92,4 +98,23 @@ class MessagesViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         secondary.typeface = regularTypeface
         date.typeface = regularTypeface
     }
+}
+
+class MessagesDiffCallback(val current : List<Message>, val new : List<Message>) : DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return current[oldItemPosition].id == new[newItemPosition].id
+    }
+
+    override fun getOldListSize(): Int {
+        return current.size
+    }
+
+    override fun getNewListSize(): Int {
+        return new.size
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return current[oldItemPosition] == new[newItemPosition]
+    }
+
 }

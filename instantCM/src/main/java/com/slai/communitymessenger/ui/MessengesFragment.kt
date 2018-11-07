@@ -23,6 +23,8 @@ class MessengesFragment : Fragment() {
 
     var storedList : HashMap<String, Message>? = null
 
+    var adapter : MessagesAdapter? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.frag_messages, container, false)
         return view
@@ -73,9 +75,9 @@ class MessengesFragment : Fragment() {
 
     private fun loadMessages(messages : HashMap<String, Message>) {
         storedList = messages
-        if(main_list.adapter == null) {
+        if(adapter == null) {
 
-            val adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values))
+            adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values))
 
             val manager = LinearLayoutManager(main_list.context, RecyclerView.VERTICAL, false)
 
@@ -84,11 +86,10 @@ class MessengesFragment : Fragment() {
 
             messages_progress.visibility = View.GONE
         } else {
+
             val array = ArrayList(messages.values)
             array.sortBy { message -> message.time }
-            val adapter = main_list.adapter as MessagesAdapter
-            adapter.list = array
-            adapter.notifyDataSetChanged()
+            adapter?.updateList(array)
         }
     }
 }
