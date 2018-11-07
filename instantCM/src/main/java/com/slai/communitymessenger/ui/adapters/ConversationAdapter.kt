@@ -16,11 +16,12 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
+import androidx.recyclerview.widget.DiffUtil
 import com.slai.communitymessenger.utils.OpenBar
 import kotlin.collections.ArrayList
 
 
-class ConversationAdapter(val context : Activity, val list : ArrayList<Message>) : RecyclerView.Adapter<ConversationViewHolder>() {
+class ConversationAdapter(val context : Activity, var list : ArrayList<Message>) : RecyclerView.Adapter<ConversationViewHolder>() {
 
     var width : Int
 
@@ -44,9 +45,13 @@ class ConversationAdapter(val context : Activity, val list : ArrayList<Message>)
 
         holder.text.text = message.body
 
-        val date : Date = Date(message.time)
-        val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US)
-        holder.date.text = dateFormat.format(date)
+        if(!message.sending){
+            val date = Date(message.time)
+            val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US)
+            holder.date.text = dateFormat.format(date)
+        } else {
+            holder.date.text = context.getString(R.string.sending)
+        }
 
         holder.itemView.tag = message
         holder.itemView.setOnClickListener {
@@ -56,6 +61,11 @@ class ConversationAdapter(val context : Activity, val list : ArrayList<Message>)
             clipboard!!.primaryClip = clip
             OpenBar.on(it.rootView).with(context.getString(R.string.clipboard_notification)).durationShort().show()
         }
+    }
+
+    fun updateList(newList : ArrayList<Message>){
+        val result : DiffUtil.DiffResult = DiffUtil.calculateDiff(ConversationDiff(list, newList))
+        result.dispatchUpdatesTo(this)
     }
 }
 
@@ -74,6 +84,26 @@ class ConversationViewHolder(viewItem : View) : RecyclerView.ViewHolder(viewItem
             params.rightMargin = 0
         }
         text.layoutParams = params
+    }
+
+}
+
+class ConversationDiff(val current : List<Message>, val new : List<Message>) : DiffUtil.Callback() {
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return new[oldItemPosition].id == current[newItemPosition].id
+    }
+
+    override fun getOldListSize(): Int {
+        return new.size
+    }
+
+    override fun getNewListSize(): Int {
+        return current.size
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return new[oldItemPosition] == current[newItemPosition]
     }
 
 }

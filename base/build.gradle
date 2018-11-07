@@ -24,8 +24,6 @@ dependencies {
     feature project(':instantCM')
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'org.greenrobot:eventbus:3.1.1'
-    api "android.arch.lifecycle:extensions:1.1.1"
-    api "android.arch.lifecycle:viewmodel:1.1.1"
 }
 repositories {
     mavenCentral()

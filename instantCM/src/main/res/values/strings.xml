@@ -7,6 +7,7 @@
 	<string name="clipboard_copied">Message Copied</string>
     <string name="clipboard_notification">Copied to clipboard</string>
 	<string name="send_a_message">Send a message</string>
+	<string name="sending">Sending...</string>
 
 	<string-array name="settings_delay_list">
 		<item>0</item>
@@ -14,5 +15,13 @@
 		<item>3000</item>
 		<item>5000</item>
 		<item>10000</item>
+	</string-array>
+
+	<string-array name="settings_delay_entries">
+		<item>Instant</item>
+		<item>1 second</item>
+		<item>3 seconds</item>
+		<item>5 seconds</item>
+		<item>10 seconds</item>
 	</string-array>
 </resources>

@@ -2,6 +2,7 @@ package com.slai.communitymessenger.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -10,14 +11,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.model.Message
 import com.slai.communitymessenger.model.events.SMSDeliverEvent
+import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import com.slai.communitymessenger.model.events.SMSSentEvent
 import com.slai.communitymessenger.ui.adapters.ConversationAdapter
 import kotlinx.android.synthetic.main.frag_conversation.*
@@ -49,6 +54,8 @@ class ConversationFragment : Fragment(){
 
     private var stored : ArrayList<Message>? = null
 
+    private var adapter: ConversationAdapter? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_conversation, container, false)
     }
@@ -75,11 +82,7 @@ class ConversationFragment : Fragment(){
         // find SMS per this thread
         if(stored == null) {
             conversation_progress.visibility = View.VISIBLE
-            val thread = Thread {
-                val list: ArrayList<Message> = SMSHandler(activity!!.applicationContext).getIndividualThread(threadId) as ArrayList<Message>
-                EventBus.getDefault().post(list)
-            }
-            thread.start()
+            grabAllMessages()
         } else {
             conversation_progress.visibility = View.GONE
             setupView(stored!!)
@@ -88,6 +91,15 @@ class ConversationFragment : Fragment(){
         setupBottomArea()
 
         setupScrolling()
+    }
+
+    private fun grabAllMessages() {
+        val thread = Thread {
+            val list: ArrayList<Message> =
+                SMSHandler(activity!!.applicationContext).getIndividualThread(threadId) as ArrayList<Message>
+            EventBus.getDefault().post(list)
+        }
+        thread.start()
     }
 
     private fun setupScrolling() {
@@ -117,16 +129,20 @@ class ConversationFragment : Fragment(){
 
     private fun setupBottomArea() {
         conversation_send.setOnClickListener {
-            if(!TextUtils.isEmpty(getText())){
-                // Send Text
-                SMSHandler(it.context).sendSMS(phoneNumber, getText())
-                // update list
-                val adapter : ConversationAdapter = conversation_list.adapter as ConversationAdapter
-                adapter.list.add(Message(getText(), "", true, Calendar.getInstance().timeInMillis, "sent", "", ""))
-                adapter.notifyItemInserted(adapter.list.size)
-                // clear text
-                conversation_text.setText("")
+            sendText()
+        }
+
+        conversation_text.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_SEND){
+                sendText()
+                true
+            } else {
+                false
             }
+        }
+
+        conversation_back.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         conversation_text.addTextChangedListener(object : TextWatcher {
@@ -150,7 +166,24 @@ class ConversationFragment : Fragment(){
                 if(!TextUtils.isEmpty(getText())) R.drawable.ic_send
                 else R.drawable.ic_photo)
         }
+    }
 
+    fun sendText() {
+        if (!TextUtils.isEmpty(getText())) {
+            // Send Text
+            SMSHandler(conversation_list.context).sendSMS(phoneNumber, getText())
+            // update list
+            val message = Message(getText(), "", true, Calendar.getInstance().timeInMillis, "sent", "", "")
+            message.sending = true
+            adapter?.list?.add(0, message)
+            adapter?.notifyItemInserted(0)
+            val handler = Handler()
+            handler.postDelayed({
+                onSentEvent(SMSSentEvent(phoneNumber))
+            }, 3000)
+            // clear text
+            conversation_text.setText("")
+        }
     }
 
     override fun onPause() {
@@ -167,29 +200,42 @@ class ConversationFragment : Fragment(){
 
     fun setupView(list: ArrayList<Message>){
         stored = list
+        if(adapter == null) {
 
-        val adapter = ConversationAdapter(activity as Activity, list)
+            adapter = ConversationAdapter(activity as Activity, list)
+            val manager = LinearLayoutManager(activity!!.applicationContext, RecyclerView.VERTICAL, true)
 
-        val manager = LinearLayoutManager(activity!!.applicationContext, RecyclerView.VERTICAL, true)
+            conversation_list.layoutManager = manager
+            conversation_list.adapter = adapter
 
-        conversation_list.layoutManager = manager
-        conversation_list.adapter = adapter
+        } else {
+            adapter?.updateList(list)
 
+        }
         conversation_progress.visibility = View.GONE
     }
 
     fun getText() : String {
-        return conversation_text.text.trim() as String
+        return conversation_text.text.toString().trim()
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSentEvent(event : SMSSentEvent){
         Log.d(TAG, "onSentEvent")
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeliverEvent(event : SMSDeliverEvent){
         Log.d(TAG, "onDeliverEvent")
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onReceiveEvent(event: SMSReceivedEvent){
+        if(event.sender == phoneNumber){
+            val message = Message(event.body, event.sender, true, Calendar.getInstance().timeInMillis, "sent", "$threadId", "")
+            stored?.add(0, message)
+            adapter?.notifyItemInserted(0)
+        }
     }
 }

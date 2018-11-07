@@ -1,5 +1,6 @@
 package com.slai.communitymessenger.model
 
+
 data class Message(var body : String, var sender: String, var readState : Boolean,
               var time : Long, var folder : String, var id : String, var person : String?){
 

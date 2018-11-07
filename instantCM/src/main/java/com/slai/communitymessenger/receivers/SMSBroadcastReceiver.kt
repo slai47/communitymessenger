@@ -30,7 +30,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
     val TAG : String = "SMSBroadcastReceiver"
 
     override fun onReceive(context : Context?, intent : Intent?) {
-        if(intent?.action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
+        if(intent?.action.equals(Telephony.Sms.Intents.SMS_DELIVER_ACTION)) {
             var smsSender = ""
             var smsBody = ""
             for (smsMessage in Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
