@@ -8,4 +8,11 @@
     <string name="clipboard_notification">Copied to clipboard</string>
 	<string name="send_a_message">Send a message</string>
 
+	<string-array name="settings_delay_list">
+		<item>0</item>
+		<item>1000</item>
+		<item>3000</item>
+		<item>5000</item>
+		<item>10000</item>
+	</string-array>
 </resources>

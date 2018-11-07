@@ -6,4 +6,7 @@ data class Message(var body : String, var sender: String, var readState : Boolea
     override fun toString(): String {
         return "Message(body='$body', sender='$sender', readState=$readState, time='$time', folder='$folder', id='$id', person=$person)"
     }
+
+    var sending : Boolean = false
+
 }
