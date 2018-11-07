@@ -161,6 +161,29 @@ class SMSHandler (val context : Context){
         return list
     }
 
+    fun getLatestSMSMessage(body : String) : Message?{
+        var message : Message? = null
+
+        val cr = context.contentResolver
+        val columns = arrayOf(Telephony.Sms.THREAD_ID, Telephony.Sms.ADDRESS, Telephony.Sms.DATE, Telephony.Sms.BODY, Telephony.Sms.TYPE, Telephony.Sms.READ, Telephony.Sms.PERSON)
+
+        val c = cr.query(
+            Telephony.Sms.Inbox.CONTENT_URI, columns, "${Telephony.Sms.BODY}=$body && ${Telephony.Sms.READ}=0", null, null)
+        val totalSMS = c.count
+
+        c.use { cursor ->
+            if (cursor.moveToFirst()) {
+                for (i in 0 until totalSMS) {
+                    val pair = parse(c)
+                    val objSms = pair.second
+                    message = objSms
+                    cursor.moveToNext()
+                }
+            }
+        }
+        return message
+    }
+
 
     fun markMessageRead(number: String, body: String) {
         val cursor = context.contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI, null, "${Telephony.Sms.ADDRESS}=$number", null, null)
