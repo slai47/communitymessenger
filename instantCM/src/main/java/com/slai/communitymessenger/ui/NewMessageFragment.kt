@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.slai.communitymessenger.R
 import kotlinx.android.synthetic.main.frag_new_messeges.*
@@ -26,7 +27,7 @@ class NewMessageFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString(ConversationFragment.ARG_TYPE, ConversationFragment.TYPE_FULL)
             bundle.putString(ConversationFragment.ARG_NUMBER, new_message_text.text.toString())
-            findNavController().navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
+            findNavController(new_message_expand).navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
         }
 
         new_message_back.setOnClickListener { v: View? ->

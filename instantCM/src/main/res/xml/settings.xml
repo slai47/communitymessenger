@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+				  xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 	<PreferenceCategory
 		android:title="App Setting">
-		<SwitchPreference android:title="Dark Theme"
-						  android:key="darkTheme"/>
+		<SwitchPreference
+				android:title="Dark Theme"
+				android:key="darkTheme"
+		/>
 
 		<ListPreference android:title="Send Delay"
 						android:key="sendDelay"
 						android:defaultValue="0"
 						android:entryValues="@array/settings_delay_list"
 						android:entries="@array/settings_delay_entries"
+						app:useSimpleSummaryProvider="true"
 		/>
 
+	</PreferenceCategory>
+
+	<PreferenceCategory
+			android:title="About">
 		<PreferenceScreen
-			android:title="App Info"
-			android:key="appInfo" />
-
-
+				android:title="App Info"
+				android:key="appInfo" />
 	</PreferenceCategory>
 </PreferenceScreen>

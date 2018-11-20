@@ -72,8 +72,11 @@ class MessagesAdapter(val context : Context, var list : List<Message>) : Recycle
     }
 
     fun updateList(newList : List<Message>){
-        val result : DiffUtil.DiffResult = DiffUtil.calculateDiff(MessagesDiffCallback(list, newList))
-        result.dispatchUpdatesTo(this)
+        if(list.size != newList.size) {
+            val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(MessagesDiffCallback(list, newList), true)
+            result.dispatchUpdatesTo(this)
+            list = newList
+        }
     }
 }
 
@@ -105,13 +108,9 @@ class MessagesDiffCallback(val current : List<Message>, val new : List<Message>)
         return current[oldItemPosition].id == new[newItemPosition].id
     }
 
-    override fun getOldListSize(): Int {
-        return current.size
-    }
+    override fun getOldListSize() = current.size
 
-    override fun getNewListSize(): Int {
-        return new.size
-    }
+    override fun getNewListSize() = new.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return current[oldItemPosition] == new[newItemPosition]

@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.slai.communitymessenger.R
 
 
@@ -29,8 +32,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     private fun initView() {
-        var version : String = ""
-        var code : Int = 0
+        var version: String = ""
+        var code: Int = 0
         try {
             val pInfo = context?.packageManager?.getPackageInfo(activity?.packageName, 0)
             version = pInfo?.versionName!!
@@ -39,8 +42,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             e.printStackTrace()
         }
 
-        var appInfo = findPreference("appInfo")
+        val appInfo = findPreference("appInfo")
         appInfo.summary = "$version ($code)"
+
+        val darkTheme: Preference = findPreference("darkTheme")
+        val summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> { preference ->
+            if(preference.isChecked) {
+                "Dark Theme"
+            } else {
+                "Light Theme"
+            }
+        }
+        darkTheme.summaryProvider = summaryProvider
     }
 
     override fun onPause() {

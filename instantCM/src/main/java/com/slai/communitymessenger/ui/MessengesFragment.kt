@@ -15,6 +15,7 @@ import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import com.slai.communitymessenger.ui.adapters.MessagesAdapter
 import com.slai.communitymessenger.utils.OpenBar
 import kotlinx.android.synthetic.main.frag_messages.*
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -25,9 +26,11 @@ class MessengesFragment : Fragment() {
 
     var adapter : MessagesAdapter? = null
 
+    var job = Job()
+    val scope = CoroutineScope(Dispatchers.Default + job)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.frag_messages, container, false)
-        return view
+        return inflater.inflate(R.layout.frag_messages, container, false)
     }
 
     override fun onResume() {
@@ -36,7 +39,7 @@ class MessengesFragment : Fragment() {
 
         if (storedList == null) {
             messages_progress.visibility = View.VISIBLE
-            updateSMSList()
+            scope.async {  updateSMSList() }
         } else {
             messages_progress.visibility = View.GONE
             loadMessages(storedList!!)
@@ -51,11 +54,8 @@ class MessengesFragment : Fragment() {
     }
 
     private fun updateSMSList() {
-        val thread = Thread {
-            val list: HashMap<String, Message> = SMSHandler(activity!!.applicationContext).getLastestSMSList()
-            EventBus.getDefault().post(list)
-        }
-        thread.start()
+        val list: HashMap<String, Message> = SMSHandler(activity!!.applicationContext).getLastestSMSList()
+        EventBus.getDefault().post(list)
     }
 
     override fun onPause() {
@@ -65,12 +65,18 @@ class MessengesFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSMSReceived(event : SMSReceivedEvent){
-        updateSMSList() // TODO this probably could be optimized. I'm not sure how yet but I feel this could be made better
+        scope.async { updateSMSList() } // TODO this probably could be optimized. I'm not sure how yet but I feel this could be made better
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTextLoaded(event : HashMap<String, Message>) {
         loadMessages(event)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(job.isActive)
+            job.cancel()
     }
 
     private fun loadMessages(messages : HashMap<String, Message>) {
@@ -86,7 +92,6 @@ class MessengesFragment : Fragment() {
 
             messages_progress.visibility = View.GONE
         } else {
-
             val array = ArrayList(messages.values)
             array.sortBy { message -> message.time }
             adapter?.updateList(array)

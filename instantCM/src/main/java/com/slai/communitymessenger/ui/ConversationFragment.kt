@@ -13,9 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
@@ -27,10 +25,12 @@ import com.slai.communitymessenger.model.events.SMSSentEvent
 import com.slai.communitymessenger.ui.adapters.ConversationAdapter
 import kotlinx.android.synthetic.main.frag_conversation.*
 import kotlinx.android.synthetic.main.snippet_conversation_bottom.*
+import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlinx.coroutines.*
 
 class ConversationFragment : Fragment(){
 
@@ -51,6 +51,9 @@ class ConversationFragment : Fragment(){
     private var threadId : String? = ""
     private var title : String? = ""
     var phoneNumber : String = ""
+
+    var job = Job()
+    val scopeContext = CoroutineScope(Dispatchers.IO + job)
 
     private var stored : ArrayList<Message>? = null
 
@@ -82,7 +85,7 @@ class ConversationFragment : Fragment(){
         // find SMS per this thread
         if(stored == null) {
             conversation_progress.visibility = View.VISIBLE
-            grabAllMessages()
+                grabAllMessages()
         } else {
             conversation_progress.visibility = View.GONE
             setupView(stored!!)
@@ -94,12 +97,11 @@ class ConversationFragment : Fragment(){
     }
 
     private fun grabAllMessages() {
-        val thread = Thread {
+         job = scopeContext.async {
             val list: ArrayList<Message> =
                 SMSHandler(activity!!.applicationContext).getIndividualThread(threadId) as ArrayList<Message>
             EventBus.getDefault().post(list)
         }
-        thread.start()
     }
 
     private fun setupScrolling() {
@@ -142,7 +144,7 @@ class ConversationFragment : Fragment(){
         }
 
         conversation_back.setOnClickListener {
-            findNavController().navigateUp()
+            conversation_text.findNavController().navigateUp()
         }
 
         conversation_text.addTextChangedListener(object : TextWatcher {
@@ -189,6 +191,12 @@ class ConversationFragment : Fragment(){
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(job.isActive)
+            job.cancel()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

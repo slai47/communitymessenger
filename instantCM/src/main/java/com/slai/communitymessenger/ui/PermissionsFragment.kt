@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 
-class PermissionsFragment: Fragment(){
+class PermissionsFragment : Fragment(){
 
     companion object {
         @JvmField val ARG_PERMISSION = "permission"
@@ -30,8 +30,7 @@ class PermissionsFragment: Fragment(){
     // might need to make this one that will accept many different permissions for future use
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.frag_permissions, container, false)
-        return view
+        return  inflater.inflate(R.layout.frag_permissions, container, false)
     }
 
     override fun onResume() {
