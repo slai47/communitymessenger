@@ -208,7 +208,7 @@ class ConversationFragment : Fragment(){
 
     fun setupView(list: ArrayList<Message>){
         stored = list
-        if(adapter == null) {
+        if(conversation_list.adapter == null) {
 
             adapter = ConversationAdapter(activity as Activity, list)
             val manager = LinearLayoutManager(activity!!.applicationContext, RecyclerView.VERTICAL, true)
@@ -218,7 +218,6 @@ class ConversationFragment : Fragment(){
 
         } else {
             adapter?.updateList(list)
-
         }
         conversation_progress.visibility = View.GONE
     }

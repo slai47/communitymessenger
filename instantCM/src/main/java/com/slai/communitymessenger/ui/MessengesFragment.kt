@@ -81,7 +81,7 @@ class MessengesFragment : Fragment() {
 
     private fun loadMessages(messages : HashMap<String, Message>) {
         storedList = messages
-        if(adapter == null) {
+        if(main_list.adapter == null) {
 
             adapter = MessagesAdapter(activity!!.applicationContext, ArrayList(messages.values))
 

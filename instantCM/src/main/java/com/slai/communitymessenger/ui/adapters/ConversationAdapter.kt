@@ -66,6 +66,7 @@ class ConversationAdapter(val context : Activity, var list : ArrayList<Message>)
     fun updateList(newList : ArrayList<Message>){
         val result : DiffUtil.DiffResult = DiffUtil.calculateDiff(ConversationDiff(list, newList))
         result.dispatchUpdatesTo(this)
+        list = newList
     }
 }
 

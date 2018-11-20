@@ -34,7 +34,7 @@ class MessagesAdapter(val context : Context, var list : List<Message>) : Recycle
     }
 
     override fun onBindViewHolder(holder: MessagesViewHolder, position: Int) {
-        val item : Message = list.get(position)
+        val item : Message = list[position]
         holder.primary.text = item.sender
         holder.secondary.text = item.body
 
@@ -72,11 +72,9 @@ class MessagesAdapter(val context : Context, var list : List<Message>) : Recycle
     }
 
     fun updateList(newList : List<Message>){
-        if(list.size != newList.size) {
-            val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(MessagesDiffCallback(list, newList), true)
-            result.dispatchUpdatesTo(this)
-            list = newList
-        }
+        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(MessagesDiffCallback(list, newList), true)
+        result.dispatchUpdatesTo(this)
+        list = newList
     }
 }
 
