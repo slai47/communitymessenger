@@ -65,7 +65,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when (key){
             "darkTheme" -> {
                 var mode = AppCompatDelegate.MODE_NIGHT_NO
-                var theme = preferenceManager.sharedPreferences.getBoolean("darkTheme", false)
+                val theme = preferenceManager.sharedPreferences.getBoolean("darkTheme", false)
                 if(theme)
                     mode = AppCompatDelegate.MODE_NIGHT_YES
                 AppCompatDelegate.setDefaultNightMode(mode)

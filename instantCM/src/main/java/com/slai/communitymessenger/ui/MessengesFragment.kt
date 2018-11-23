@@ -39,7 +39,7 @@ class MessengesFragment : Fragment() {
 
         if (storedList == null) {
             messages_progress.visibility = View.VISIBLE
-            scope.async {  updateSMSList() }
+            job = scope.async {  updateSMSList() }
         } else {
             messages_progress.visibility = View.GONE
             loadMessages(storedList!!)
@@ -53,9 +53,14 @@ class MessengesFragment : Fragment() {
         }
     }
 
-    private fun updateSMSList() {
+    /**
+     * Run in background
+     */
+    private suspend fun updateSMSList() {
         val list: HashMap<String, Message> = SMSHandler(activity!!.applicationContext).getLastestSMSList()
-        EventBus.getDefault().post(list)
+        withContext(Dispatchers.Main){
+            loadMessages(list)
+        }
     }
 
     override fun onPause() {
@@ -65,12 +70,7 @@ class MessengesFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSMSReceived(event : SMSReceivedEvent){
-        scope.async { updateSMSList() } // TODO this probably could be optimized. I'm not sure how yet but I feel this could be made better
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onTextLoaded(event : HashMap<String, Message>) {
-        loadMessages(event)
+        job = scope.async { updateSMSList() } // TODO this probably could be optimized. I'm not sure how yet but I feel this could be made better
     }
 
     override fun onStop() {

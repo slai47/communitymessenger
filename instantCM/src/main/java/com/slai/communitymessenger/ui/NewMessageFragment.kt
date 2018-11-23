@@ -11,10 +11,15 @@ import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.slai.communitymessenger.R
 import kotlinx.android.synthetic.main.frag_new_messeges.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import org.greenrobot.eventbus.EventBus
 
 class NewMessageFragment : Fragment() {
 
+
+    var job = Job()
+    val scope = CoroutineScope(IO + job)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.frag_new_messeges, container, false)
@@ -22,12 +27,18 @@ class NewMessageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        initView()
+    }
 
+    private fun initView() {
         new_message_expand.setOnClickListener { v: View? ->
             val bundle = Bundle()
             bundle.putString(ConversationFragment.ARG_TYPE, ConversationFragment.TYPE_FULL)
             bundle.putString(ConversationFragment.ARG_NUMBER, new_message_text.text.toString())
-            findNavController(new_message_expand).navigate(R.id.action_messengesFragment_to_conversationFragment, bundle)
+            findNavController(new_message_expand).navigate(
+                R.id.action_messengesFragment_to_conversationFragment,
+                bundle
+            )
         }
 
         new_message_back.setOnClickListener { v: View? ->
@@ -35,6 +46,16 @@ class NewMessageFragment : Fragment() {
         }
 
         setupSearchMethod()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(job.isActive)
+            job.cancel()
     }
 
     private fun setupSearchMethod() {
@@ -47,7 +68,8 @@ class NewMessageFragment : Fragment() {
 
         new_message_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-
+                val search : String = s.toString()
+                job = scope.async { suspendGrabContacts(search) }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -64,8 +86,20 @@ class NewMessageFragment : Fragment() {
         return new_message_text.text.toString()
     }
 
-    override fun onPause() {
-        super.onPause()
+
+    private suspend fun suspendGrabContacts(search : String)  {
+        // Grab
+        val list = ArrayList<String>()
+
+
+
+        withContext(Dispatchers.Main) {
+            setupList(list)
+        }
     }
 
+    private fun setupList(list: ArrayList<String>) {
+
+
+    }
 }

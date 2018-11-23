@@ -85,7 +85,7 @@ class ConversationFragment : Fragment(){
         // find SMS per this thread
         if(stored == null) {
             conversation_progress.visibility = View.VISIBLE
-                grabAllMessages()
+            grabAllMessages()
         } else {
             conversation_progress.visibility = View.GONE
             setupView(stored!!)
@@ -100,7 +100,11 @@ class ConversationFragment : Fragment(){
          job = scopeContext.async {
             val list: ArrayList<Message> =
                 SMSHandler(activity!!.applicationContext).getIndividualThread(threadId) as ArrayList<Message>
-            EventBus.getDefault().post(list)
+             if(list.isNotEmpty() && list[0].id == threadId){
+                 withContext(Dispatchers.IO) {
+                         setupView(list)
+                 }
+             }
         }
     }
 
@@ -197,13 +201,6 @@ class ConversationFragment : Fragment(){
         super.onStop()
         if(job.isActive)
             job.cancel()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceive(list : ArrayList<Message>){
-        if(list.isNotEmpty() && list[0].id == threadId){
-            setupView(list)
-        }
     }
 
     fun setupView(list: ArrayList<Message>){
