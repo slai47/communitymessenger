@@ -13,16 +13,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
 import com.slai.communitymessenger.model.Message
+import com.slai.communitymessenger.model.events.CollapseConverstionDelayEvent
 import com.slai.communitymessenger.model.events.SMSDeliverEvent
 import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import com.slai.communitymessenger.model.events.SMSSentEvent
 import com.slai.communitymessenger.ui.adapters.ConversationAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.frag_conversation.*
 import kotlinx.android.synthetic.main.snippet_conversation_bottom.*
 import kotlinx.coroutines.Job
@@ -135,6 +139,7 @@ class ConversationFragment : Fragment(){
 
     private fun setupBottomArea() {
         conversation_send.setOnClickListener {
+
             sendText()
         }
 
@@ -148,7 +153,7 @@ class ConversationFragment : Fragment(){
         }
 
         conversation_back.setOnClickListener {
-            conversation_text.findNavController().navigateUp()
+            Navigation.findNavController(it).popBackStack(R.id.messengesFragment, true)
         }
 
         conversation_text.addTextChangedListener(object : TextWatcher {
@@ -231,7 +236,13 @@ class ConversationFragment : Fragment(){
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeliverEvent(event : SMSDeliverEvent){
         Log.d(TAG, "onDeliverEvent")
+    }
 
+    @Subscribe
+    fun onCollapseEventRecieved(event : CollapseConverstionDelayEvent){
+        if(type == TYPE_SHORT){
+            fragmentManager?.popBackStack(phoneNumber, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

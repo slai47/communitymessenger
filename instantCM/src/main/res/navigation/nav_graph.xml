@@ -8,8 +8,8 @@
               android:name="com.slai.communitymessenger.ui.MessengesFragment"
               android:label="MessengesFragment"
               tools:layout="@layout/frag_messages">
-        <action android:id="@+id/action_messengesFragment_to_permissionsFragment"
-                app:destination="@id/permissionsFragment"/>
+		<action android:id="@+id/action_messengesFragment_to_permissionsFragment"
+				app:destination="@id/permissionsFragment" app:launchSingleTop="true"/>
         <action android:id="@+id/action_messengesFragment_to_newMessageFragment"
                 app:destination="@id/newMessageFragment"/>
 		<action android:id="@+id/action_messengesFragment_to_conversationFragment"
@@ -32,8 +32,8 @@
               android:name="com.slai.communitymessenger.ui.ConversationFragment"
               android:label="ConversationFragment"
               tools:layout="@layout/frag_conversation">
-        <action android:id="@+id/action_conversationFragment_to_permissionsFragment"
-                app:destination="@id/permissionsFragment"/>
+		<action android:id="@+id/action_conversationFragment_to_permissionsFragment"
+				app:destination="@id/permissionsFragment"/>
         <argument android:name="id" app:argType="String" android:defaultValue="0"/>
         <argument android:name="type" app:argType="String" android:defaultValue="full"/>
         <argument android:name="title" app:argType="String" android:defaultValue=""/>
@@ -43,7 +43,7 @@
               android:label="PermissionsFragment">
         <action android:id="@+id/action_permissionsFragment_to_messengesFragment"
                 app:destination="@id/messengesFragment"
-                tools:layout="@layout/frag_permissions"/>
+                tools:layout="@layout/frag_permissions" app:popUpTo="@id/messengesFragment"/>
         <action android:id="@+id/action_permissionsFragment_to_conversationFragment"
                 app:destination="@id/ConversationFragment"/>
         <argument android:name="permission" app:argType="String" android:defaultValue="sms"/>

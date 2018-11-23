@@ -2,6 +2,7 @@ package com.slai.communitymessenger.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.slai.communitymessenger.R
 import com.slai.communitymessenger.handlers.SMSHandler
+import com.slai.communitymessenger.model.events.CollapseConverstionDelayEvent
 import com.slai.communitymessenger.model.events.SMSReceivedEvent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.frag_messages.*
@@ -44,11 +46,12 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> {
+
                 Navigation.findNavController(my_nav_host_fragment.view!!).navigate(R.id.action_messengesFragment_to_settingsFragment)
                 return true
             }
             android.R.id.home -> {
-                NavUtils.navigateUpFromSameTask(this)
+                onBackPressed()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -71,14 +74,14 @@ class MainActivity : AppCompatActivity() {
     @Subscribe
     fun onNewMessageRecieved(event : SMSReceivedEvent){
         val currentFrag = supportFragmentManager.findFragmentById(R.id.my_nav_host_fragment)
-        var showPopup = false
-        if(currentFrag != null && currentFrag is ConversationFragment){
-            val messageFrag = currentFrag as ConversationFragment
-            val currentThread = messageFrag.phoneNumber
-            showPopup = event.sender == currentThread
-        } else if(currentFrag is MessengesFragment){
-            showPopup = true
-        }
+        var showPopup = true
+//        if(currentFrag != null && currentFrag is ConversationFragment){
+//            val messageFrag = currentFrag as ConversationFragment
+//            val currentThread = messageFrag.phoneNumber
+//            showPopup = event.sender == currentThread
+//        } else if(currentFrag is MessengesFragment){
+//            showPopup = true
+//        }
 
         if(showPopup){
             val fragment = ConversationFragment()
@@ -89,7 +92,13 @@ class MainActivity : AppCompatActivity() {
             bundle.putString(ConversationFragment.ARG_TITLE, "")
             fragment.arguments = bundle
 
-            supportFragmentManager.beginTransaction().add(R.id.my_nav_host_fragment, fragment).commit()
+            val handler = Handler()
+            handler.postDelayed({
+                EventBus.getDefault().post(CollapseConverstionDelayEvent(event.sender))
+            }, 5000)
+
+            supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_down, R.anim.slide_up, R.anim.slide_down, R.anim.slide_up).add(R.id.my_nav_host_fragment, fragment).addToBackStack(event.sender).commit()
         }
     }
+
 }
