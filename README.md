@@ -1,5 +1,9 @@
 # communitymessenger
 
+Stopping as there are issues with navigation library and more having to work on SMS related issues than Kotlin learning. Switching projects.
+
+- log (12/16/2018)
+
 Might change projects as I've ended up having to learn more SMS coding, handling and SQL then actually learning kotlin.
 
 Maybe should switch over to something that is more on kotlin working.
